@@ -16,10 +16,10 @@ import (
 type Response struct {
 	*http.Response
 
-	Next           int      `json:"next"`
-	ResultsPerPage int      `json:"results_per_page"`
-	Results        []string `json:"results"`
-	Total          int      `json:"total"`
+	Next           int         `json:"next"`
+	Results        interface{} `json:"results"`
+	ResultsPerPage int         `json:"results_per_page"`
+	Total          int         `json:"total"`
 }
 
 // Ensure that the build fails if Error and Errors don't implement error.

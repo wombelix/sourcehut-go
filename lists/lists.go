@@ -25,7 +25,7 @@ type Option func(*Client) error
 // sourcehut.Client for API requests.
 // If unspecified, the default sourcehut.Client (with no options of its own) is
 // used.
-func SrhtClient(client *sourcehut.Client) Option {
+func SrhtClient(client sourcehut.Client) Option {
 	return func(c *Client) error {
 		c.srhtClient = client
 		return nil
@@ -60,7 +60,7 @@ func Base(base string) Option {
 // API docs: https://man.sr.ht/lists.sr.ht/api.md
 type Client struct {
 	baseURL    *url.URL
-	srhtClient *sourcehut.Client
+	srhtClient sourcehut.Client
 }
 
 // NewClient returns a new mailing list API client.
@@ -97,10 +97,7 @@ func (c *Client) Version() (string, error) {
 	return ver.Version, err
 }
 
-// do sends an API request and returns the API response.
-// The response is unmarshaled into v if successful, or returned as an error
-// value if an API error has occured.
-func (c *Client) do(method, u string, body io.Reader, v interface{}) (*sourcehut.Response, error) {
+func (c *Client) do(method, u string, body io.Reader, v interface{}) (*http.Response, error) {
 	u = c.baseURL.String() + u
 	req, err := http.NewRequest(method, u, body)
 	if err != nil {
