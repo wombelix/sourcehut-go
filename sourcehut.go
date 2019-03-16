@@ -70,6 +70,17 @@ func (c *Client) Do(req *http.Request, v interface{}) (*Response, error) {
 	}
 	defer resp.Body.Close()
 
+	if c.accessToken != "" {
+		// TODO: do we need to sanitize this to prevent header injection in case the
+		// user takes this value from somewhere they shouldn't?
+		req.Header.Set("Authorization", c.accessToken)
+	}
+	if c.userAgent != "" {
+		// TODO: do we need to sanitize this to prevent header injection in case the
+		// user takes this value from somewhere they shouldn't?
+		req.Header.Set("User-Agent", c.userAgent)
+	}
+
 	// TODO: decode common fields and check if this is an error.
 	err = json.NewDecoder(resp.Body).Decode(v)
 	if err != nil {
