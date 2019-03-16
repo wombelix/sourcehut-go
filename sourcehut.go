@@ -1,3 +1,7 @@
+// Copyright 2019 The SourceHut API Contributors.
+// Use of this source code is governed by the BSD 2-clause
+// license that can be found in the LICENSE file.
+
 // Package sourcehut provides access to the SourceHut HTTP API.
 package sourcehut
 
