@@ -73,7 +73,7 @@ func (c *Client) Do(req *http.Request, v interface{}) (*Response, error) {
 	if c.accessToken != "" {
 		// TODO: do we need to sanitize this to prevent header injection in case the
 		// user takes this value from somewhere they shouldn't?
-		req.Header.Set("Authorization", c.accessToken)
+		req.Header.Set("Authorization", "token "+c.accessToken)
 	}
 	if c.userAgent != "" {
 		// TODO: do we need to sanitize this to prevent header injection in case the
