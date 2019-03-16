@@ -18,6 +18,42 @@ import (
 // It is exported for convenience.
 const BaseURL = "https://lists.sr.ht/api/"
 
+// Option is used to configure an API client.
+type Option func(*Client) error
+
+// SrhtClient returns an option that configures the client to use the provided
+// sourcehut.Client for API requests.
+// If unspecified, the default sourcehut.Client (with no options of its own) is
+// used.
+func SrhtClient(client *sourcehut.Client) Option {
+	return func(c *Client) error {
+		c.srhtClient = client
+		return nil
+	}
+}
+
+// BaseURL returns an option that configures the public Sourcehut API URL.
+//
+// If base is not a valid URL, the option panics.
+// If base does not have a trailing slash, one is added automatically.
+// If unspecified, BaseURL is used.
+func Base(base string) Option {
+	return func(c *Client) error {
+		if base == "" {
+			base = BaseURL
+		}
+		u, err := url.Parse(base)
+		if err != nil {
+			return err
+		}
+		if !strings.HasSuffix(u.Path, "/") {
+			u.Path += "/"
+		}
+		c.baseURL = u
+		return nil
+	}
+}
+
 // Client handles communication with the mailing lists related methods of the
 // SourceHut API.
 //
@@ -28,30 +64,26 @@ type Client struct {
 }
 
 // NewClient returns a new mailing list API client.
-// If baseURL is empty, it defaults to the public SourceHut mailing lists API.
-// If baseURL does not have a trailing slash, one is added automatically.
-// If srhtClient is nil, a new client is created using http.DefaultClient.
-func NewClient(baseURL string, srhtClient *sourcehut.Client) (*Client, error) {
-	if baseURL == "" {
-		baseURL = BaseURL
-	}
-	u, err := url.Parse(baseURL)
+func NewClient(opts ...Option) (*Client, error) {
+	u, err := url.Parse(BaseURL)
 	if err != nil {
 		return nil, err
 	}
-	if !strings.HasSuffix(u.Path, "/") {
-		u.Path += "/"
-	}
 
-	if srhtClient == nil {
+	c := Client{
+		baseURL: u,
+
 		// TODO: with no access token, is this behavior useful?
-		srhtClient = sourcehut.NewClient()
+		// Maybe this should be a required argument and not an option.
+		srhtClient: sourcehut.NewClient(),
+	}
+	for _, opt := range opts {
+		if err = opt(&c); err != nil {
+			return nil, err
+		}
 	}
 
-	return &Client{
-		baseURL:    u,
-		srhtClient: srhtClient,
-	}, nil
+	return &c, nil
 }
 
 // Version returns the version of the API.
