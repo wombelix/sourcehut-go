@@ -32,7 +32,7 @@ func SrhtClient(client *sourcehut.Client) Option {
 	}
 }
 
-// BaseURL returns an option that configures the public Sourcehut API URL.
+// Base returns an option that configures the public Sourcehut API URL.
 //
 // If base is not a valid URL, the option panics.
 // If base does not have a trailing slash, one is added automatically.
