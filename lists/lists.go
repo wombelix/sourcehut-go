@@ -44,8 +44,8 @@ func NewClient(baseURL string, srhtClient *sourcehut.Client) (*Client, error) {
 	}
 
 	if srhtClient == nil {
-		// TODO: access
-		srhtClient = sourcehut.NewClient(nil, "")
+		// TODO: with no access token, is this behavior useful?
+		srhtClient = sourcehut.NewClient()
 	}
 
 	return &Client{
