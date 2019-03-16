@@ -81,13 +81,25 @@ func (c *Client) Do(req *http.Request, v interface{}) (*Response, error) {
 		req.Header.Set("User-Agent", c.userAgent)
 	}
 
+	srhtResp := &Response{
+		Response: resp,
+	}
+	if resp.StatusCode >= 400 {
+		e := struct {
+			Errors Errors `json:"errors"`
+		}{}
+		err = json.NewDecoder(resp.Body).Decode(&e)
+		if err != nil {
+			return srhtResp, err
+		}
+		return srhtResp, e.Errors
+	}
+
 	// TODO: decode common fields and check if this is an error.
 	err = json.NewDecoder(resp.Body).Decode(v)
 	if err != nil {
-		return nil, err
+		return srhtResp, err
 	}
 
-	return &Response{
-		Response: resp,
-	}, nil
+	return srhtResp, nil
 }

@@ -20,11 +20,10 @@ type Response struct {
 	ResultsPerPage int      `json:"results_per_page"`
 	Results        []string `json:"results"`
 	Total          int      `json:"total"`
-	Errors         []Error  `json:"errors"`
 }
 
-// Ensure that the build fails if Error
-var _ error = (*Error)(nil)
+// Ensure that the build fails if Error and Errors don't implement error.
+var _, _ error = (*Error)(nil), (*Errors)(nil)
 
 // Error represents an individual error returned from a SourceHut API call.
 //
@@ -34,7 +33,17 @@ type Error struct {
 	Reason string
 }
 
-// Error satisfies the error interface for the Error type.
+// Error satisfies the error interface for Error.
 func (err *Error) Error() string {
 	return err.Reason
+}
+
+// Errors is a slice of Error's that itself implements error.
+type Errors []Error
+
+// Error satisfies the error interface for Errors.
+func (err Errors) Error() string {
+	// TODO: I don't love this errors collection thing. Is there a sane way to
+	// implement error for it?
+	return "Multiple API errors occured"
 }
