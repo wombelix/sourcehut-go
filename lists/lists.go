@@ -1,3 +1,4 @@
+// Package lists provides easy API access to SourceHut mailing lists.
 package lists
 
 import (

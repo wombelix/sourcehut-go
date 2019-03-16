@@ -1,3 +1,4 @@
+// Package sourcehut provides access to the SourceHut HTTP API.
 package sourcehut
 
 import (
