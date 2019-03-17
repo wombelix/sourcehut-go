@@ -97,6 +97,27 @@ func (c *Client) Version() (string, error) {
 	return ver.Version, err
 }
 
+// Lists returns an iterator over all mailing lists owned by the provided
+// username.
+// If an empty username is provided, the authenticated user is used.
+func (c *Client) Lists(username string) (ListIter, error) {
+	path := "lists"
+	if username != "" {
+		path = "user/" + url.PathEscape(username) + "/lists"
+	}
+	return c.lists("GET", path, nil)
+}
+
+// Posts returns the posts in a mailing list owned by the given username.
+// If an empty username is provided, the authenticated user is used.
+func (c *Client) Posts(username, listname string) (PostIter, error) {
+	path := "lists/" + url.PathEscape(listname) + "/posts"
+	if username != "" {
+		path = "user/" + url.PathEscape(username) + "/" + path
+	}
+	return c.posts("GET", path, nil)
+}
+
 func (c *Client) do(method, u string, body io.Reader, v interface{}) (*http.Response, error) {
 	u = c.baseURL.String() + u
 	req, err := http.NewRequest(method, u, body)
@@ -104,4 +125,34 @@ func (c *Client) do(method, u string, body io.Reader, v interface{}) (*http.Resp
 		return nil, err
 	}
 	return c.srhtClient.Do(req, v)
+}
+
+func (c *Client) lists(method, u string, body io.Reader) (ListIter, error) {
+	u = c.baseURL.String() + u
+	req, err := http.NewRequest(method, u, body)
+	if err != nil {
+		return ListIter{}, err
+	}
+	iter, err := c.srhtClient.List(req, func() interface{} {
+		return &List{}
+	})
+	if err != nil {
+		return ListIter{}, err
+	}
+	return ListIter{Iter: iter}, nil
+}
+
+func (c *Client) posts(method, u string, body io.Reader) (PostIter, error) {
+	u = c.baseURL.String() + u
+	req, err := http.NewRequest(method, u, body)
+	if err != nil {
+		return PostIter{}, err
+	}
+	iter, err := c.srhtClient.List(req, func() interface{} {
+		return &Post{}
+	})
+	if err != nil {
+		return PostIter{}, err
+	}
+	return PostIter{Iter: iter}, nil
 }
