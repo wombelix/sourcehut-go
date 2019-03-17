@@ -64,12 +64,10 @@ func NewTransport(opts ...Option) *Transport {
 // RoundTrip authorizes and authenticates the request with an
 // access token from Transport's Source.
 func (t *Transport) RoundTrip(req *http.Request) (*http.Response, error) {
-	reqBodyClosed := false
 	if req.Body != nil {
 		defer func() {
-			if !reqBodyClosed {
-				req.Body.Close()
-			}
+			/* #nosec */
+			req.Body.Close()
 		}()
 	}
 
@@ -140,7 +138,10 @@ func (c Client) Do(req *http.Request, v interface{}) (*http.Response, error) {
 	if err != nil {
 		return resp, err
 	}
-	defer resp.Body.Close()
+	defer func() {
+		/* #nosec */
+		resp.Body.Close()
+	}()
 
 	err = json.NewDecoder(resp.Body).Decode(v)
 	if err != nil {
