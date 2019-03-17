@@ -5,10 +5,6 @@
 package paste
 
 import (
-	"time"
-)
-
-import (
 	"git.sr.ht/~samwhited/sourcehut-go"
 )
 
@@ -20,15 +16,4 @@ type Iter struct {
 // Paste returns the paste which the iterator is currently pointing to.
 func (i Iter) Paste() *Paste {
 	return i.Current().(*Paste)
-}
-
-// Paste contains data about a set of files.
-type Paste struct {
-	ID      string              `json:"sha"`
-	Created time.Time           `json:"created"`
-	User    sourcehut.ShortUser `json:"user"`
-	Files   []struct {
-		ID   string `json:"blob_id"`
-		Name string `json:"filename"`
-	} `json:"files"`
 }

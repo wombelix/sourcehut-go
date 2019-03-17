@@ -103,6 +103,13 @@ func (c *Client) List() (Iter, error) {
 	return c.list("GET", path, nil)
 }
 
+// Get returns information about a paste with the given ID.
+func (c *Client) Get(id string) (Paste, error) {
+	p := Paste{}
+	_, err := c.do("GET", "pastes/"+url.PathEscape(id), nil, &p)
+	return p, err
+}
+
 func (c *Client) do(method, u string, body io.Reader, v interface{}) (*http.Response, error) {
 	u = c.baseURL.String() + u
 	req, err := http.NewRequest(method, u, body)
