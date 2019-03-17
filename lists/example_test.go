@@ -15,7 +15,7 @@ func ExamplePostIter() {
 	srhtClient := sourcehut.NewClient(sourcehut.Token("<personal access token>"))
 	listClient, _ := lists.NewClient(lists.SrhtClient(srhtClient))
 
-	iter, _ := listClient.Posts("~sircmpwn", "sr.ht-dev")
+	iter, _ := listClient.ListPosts("~sircmpwn", "sr.ht-dev")
 	for iter.Next() {
 		p := iter.Post()
 		log.Printf("Post %d: %q\n", p.ID, p.Subject)

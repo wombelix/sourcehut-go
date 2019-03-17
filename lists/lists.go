@@ -97,10 +97,10 @@ func (c *Client) Version() (string, error) {
 	return ver.Version, err
 }
 
-// Lists returns an iterator over all mailing lists owned by the provided
+// List returns an iterator over all mailing lists owned by the provided
 // username.
 // If an empty username is provided, the authenticated user is used.
-func (c *Client) Lists(username string) (ListIter, error) {
+func (c *Client) List(username string) (ListIter, error) {
 	path := "lists"
 	if username != "" {
 		path = "user/" + url.PathEscape(username) + "/lists"
@@ -108,9 +108,9 @@ func (c *Client) Lists(username string) (ListIter, error) {
 	return c.lists("GET", path, nil)
 }
 
-// Posts returns the posts in a mailing list owned by the given username.
+// ListPosts returns the posts in a mailing list owned by the given username.
 // If an empty username is provided, the authenticated user is used.
-func (c *Client) Posts(username, listname string) (PostIter, error) {
+func (c *Client) ListPosts(username, listname string) (PostIter, error) {
 	path := "lists/" + url.PathEscape(listname) + "/posts"
 	if username != "" {
 		path = "user/" + url.PathEscape(username) + "/" + path

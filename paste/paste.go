@@ -97,8 +97,8 @@ func (c *Client) Version() (string, error) {
 	return ver.Version, err
 }
 
-// Pastes returns an iterator over all pastes owned by the authenticated user.
-func (c *Client) Pastes() (Iter, error) {
+// List returns an iterator over all pastes owned by the authenticated user.
+func (c *Client) List() (Iter, error) {
 	path := "pastes"
 	return c.list("GET", path, nil)
 }
