@@ -110,6 +110,13 @@ func (c *Client) Get(id string) (Paste, error) {
 	return p, err
 }
 
+// GetBlob returns information about a particular file in a paste.
+func (c *Client) GetBlob(id string) (Blob, error) {
+	p := Blob{}
+	_, err := c.do("GET", "blobs/"+url.PathEscape(id), nil, &p)
+	return p, err
+}
+
 func (c *Client) do(method, u string, body io.Reader, v interface{}) (*http.Response, error) {
 	u = c.baseURL.String() + u
 	req, err := http.NewRequest(method, u, body)
