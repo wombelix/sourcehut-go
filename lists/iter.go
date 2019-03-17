@@ -12,7 +12,7 @@ import (
 
 // ListIter is used for iterating over a collection of mailing lists.
 type ListIter struct {
-	*sourcehut.ListIter
+	*sourcehut.Iter
 }
 
 // List returns the mailing list which the iterator is currently pointing to.
