@@ -7,7 +7,9 @@ package sourcehut
 
 import (
 	"encoding/json"
+	"errors"
 	"net/http"
+	"strings"
 )
 
 // Option is used to configure a SourceHut API client.
@@ -136,13 +138,62 @@ func NewClient(opts ...Option) Client {
 // The response is unmarshaled into v if successful, or returned as an error
 // value if an API error has occured.
 func (c Client) Do(req *http.Request, v interface{}) (*http.Response, error) {
+	resp, err := c.do(req)
+	if err != nil {
+		return resp, err
+	}
+	defer resp.Body.Close()
+
+	err = json.NewDecoder(resp.Body).Decode(v)
+	if err != nil {
+		return resp, err
+	}
+
+	return resp, nil
+}
+
+// List sends an API request for an endpoint that supports pagination.
+// Each item returned from the iterator will be created by calling d.
+// If d is nil, a map[string]interface{} is created for each item and populated
+// with the values from the JSON.
+//
+// An iterator will always be returned (with the response populated if one was
+// received) even if an error occurs.
+func (c Client) List(req *http.Request, d func() interface{}) (*Iter, error) {
+	resp, err := c.do(req)
+	iter := &Iter{resp: &Response{Response: resp}, c: c, into: d}
+	if err != nil {
+		return iter, err
+	}
+	defer resp.Body.Close()
+
+	err = json.NewDecoder(resp.Body).Decode(iter.resp)
+	if err != nil {
+		return iter, err
+	}
+	iter.d = json.NewDecoder(strings.NewReader(string(iter.resp.Results)))
+	// Advance past the first token so that we can treat the array as a stream.
+	tok, err := iter.d.Token()
+	if err != nil {
+		return iter, err
+	}
+	if delim, ok := tok.(json.Delim); !ok || delim != '[' {
+		return iter, errors.New("Expected json array in response")
+	}
+	// TODO: clone this.
+	iter.req = req
+
+	return iter, nil
+}
+
+func (c Client) do(req *http.Request) (*http.Response, error) {
 	resp, err := c.httpClient.Do(req)
 	if err != nil {
 		return nil, err
 	}
-	defer resp.Body.Close()
 
 	if resp.StatusCode >= 400 {
+		defer resp.Body.Close()
 		e := struct {
 			Errors Errors `json:"errors"`
 		}{}
@@ -153,22 +204,5 @@ func (c Client) Do(req *http.Request, v interface{}) (*http.Response, error) {
 		return resp, e.Errors
 	}
 
-	// TODO: decode common fields and check if this is an error.
-	err = json.NewDecoder(resp.Body).Decode(v)
-	if err != nil {
-		return resp, err
-	}
-
 	return resp, nil
-}
-
-// List sends an API request and returns the API response.
-// The response is assumed to be a list and is unmarshaled into the Response.
-//
-// The list itself is unmarshaled into v.
-func (c Client) List(req *http.Request, v interface{}) (*Response, error) {
-	srhtResp := &Response{Results: v}
-	resp, err := c.Do(req, srhtResp)
-	srhtResp.Response = resp
-	return srhtResp, err
 }

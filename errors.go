@@ -4,24 +4,6 @@
 
 package sourcehut
 
-import (
-	"net/http"
-)
-
-// Response is a SourceHut API response.
-// This wraps the standard http.Response and provides convenient access to
-// pagination links.
-//
-// API docs: https://man.sr.ht/api-conventions.md
-type Response struct {
-	*http.Response
-
-	Next           int         `json:"next"`
-	Results        interface{} `json:"results"`
-	ResultsPerPage int         `json:"results_per_page"`
-	Total          int         `json:"total"`
-}
-
 // Ensure that the build fails if Error and Errors don't implement error.
 var _, _ error = (*Error)(nil), (*Errors)(nil)
 
@@ -45,5 +27,10 @@ type Errors []Error
 func (err Errors) Error() string {
 	// TODO: I don't love this errors collection thing. Is there a sane way to
 	// implement error for it?
-	return "Multiple API errors occured"
+	// return "Multiple API errors occured"
+	var s string
+	for _, e := range err {
+		s += e.Error() + " :: "
+	}
+	return s
 }
