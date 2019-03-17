@@ -7,9 +7,7 @@ package sourcehut
 
 import (
 	"encoding/json"
-	"errors"
 	"net/http"
-	"strings"
 )
 
 // Option is used to configure a SourceHut API client.
@@ -152,38 +150,14 @@ func (c Client) Do(req *http.Request, v interface{}) (*http.Response, error) {
 	return resp, nil
 }
 
-// List sends an API request for an endpoint that supports pagination.
-// Each item returned from the iterator will be created by calling d.
-// If d is nil, a map[string]interface{} is created for each item and populated
-// with the values from the JSON.
+// List returns an iterator that can transparently make API requests to a
+// paginated endpoint.
+// Each item will be decoded into the value returned from a call to d.
+// If d is nil, a map[string]interface{} is created for each item.
 //
-// An iterator will always be returned (with the response populated if one was
-// received) even if an error occurs.
-func (c Client) List(req *http.Request, d func() interface{}) (*Iter, error) {
-	resp, err := c.do(req)
-	iter := &Iter{resp: &Response{Response: resp}, c: c, into: d}
-	if err != nil {
-		return iter, err
-	}
-	defer resp.Body.Close()
-
-	err = json.NewDecoder(resp.Body).Decode(iter.resp)
-	if err != nil {
-		return iter, err
-	}
-	iter.d = json.NewDecoder(strings.NewReader(string(iter.resp.Results)))
-	// Advance past the first token so that we can treat the array as a stream.
-	tok, err := iter.d.Token()
-	if err != nil {
-		return iter, err
-	}
-	if delim, ok := tok.(json.Delim); !ok || delim != '[' {
-		return iter, errors.New("Expected json array in response")
-	}
-	// TODO: clone this.
-	iter.req = req
-
-	return iter, nil
+// No HTTP request will be issued until iteration is started by a call to Next.
+func (c Client) List(req *http.Request, d func() interface{}) *Iter {
+	return &Iter{req: req, c: c, into: d}
 }
 
 func (c Client) do(req *http.Request) (*http.Response, error) {

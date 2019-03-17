@@ -6,7 +6,9 @@ package sourcehut
 
 import (
 	"encoding/json"
+	"errors"
 	"net/http"
+	"strings"
 )
 
 // Response is a SourceHut API response.
@@ -54,7 +56,7 @@ func (i *Iter) Err() error {
 // available through the Current method.
 // When the end of the list is reached it returns False.
 func (i *Iter) Next() bool {
-	if i.d == nil {
+	if i.err != nil {
 		return false
 	}
 
@@ -65,26 +67,42 @@ func (i *Iter) Next() bool {
 		v = i.into()
 	}
 
-	if !i.d.More() {
+	if i.d == nil || !i.d.More() {
 		// We're out of JSON to decode, fetch the next page if there is one…
-		if i.resp.Next == "" {
-			return false
+		if i.resp != nil {
+			if i.resp.Next == "" {
+				return false
+			}
+
+			// TODO: clone req
+			q := i.req.URL.Query()
+			q.Set("start", i.resp.Next)
+			i.req.URL.RawQuery = q.Encode()
 		}
 
-		// TODO: clone req
-		q := i.req.URL.Query()
-		q.Set("start", i.resp.Next)
-		i.req.URL.RawQuery = q.Encode()
-
-		iter, err := i.c.List(i.req, i.into)
+		resp, err := i.c.do(i.req)
 		if err != nil {
 			i.err = err
 			return false
 		}
-		i.resp = iter.resp
-		i.err = iter.err
-		i.d = iter.d
-		i.req = iter.req
+		i.resp = &Response{Response: resp}
+		defer i.resp.Body.Close()
+
+		i.err = json.NewDecoder(i.resp.Body).Decode(i.resp)
+		if i.err != nil {
+			return false
+		}
+		i.d = json.NewDecoder(strings.NewReader(string(i.resp.Results)))
+		// Advance past the first token so that we can treat the array as a stream.
+		tok, err := i.d.Token()
+		if err != nil {
+			i.err = err
+			return false
+		}
+		if delim, ok := tok.(json.Delim); !ok || delim != '[' {
+			i.err = errors.New("Expected json array in response")
+			return false
+		}
 	}
 
 	i.err = i.d.Decode(&v)

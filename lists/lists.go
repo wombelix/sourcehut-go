@@ -133,12 +133,9 @@ func (c *Client) lists(method, u string, body io.Reader) (ListIter, error) {
 	if err != nil {
 		return ListIter{}, err
 	}
-	iter, err := c.srhtClient.List(req, func() interface{} {
+	iter := c.srhtClient.List(req, func() interface{} {
 		return &List{}
 	})
-	if err != nil {
-		return ListIter{}, err
-	}
 	return ListIter{Iter: iter}, nil
 }
 
@@ -148,11 +145,8 @@ func (c *Client) posts(method, u string, body io.Reader) (PostIter, error) {
 	if err != nil {
 		return PostIter{}, err
 	}
-	iter, err := c.srhtClient.List(req, func() interface{} {
+	iter := c.srhtClient.List(req, func() interface{} {
 		return &Post{}
 	})
-	if err != nil {
-		return PostIter{}, err
-	}
 	return PostIter{Iter: iter}, nil
 }

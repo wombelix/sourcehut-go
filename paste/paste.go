@@ -118,11 +118,8 @@ func (c *Client) list(method, u string, body io.Reader) (Iter, error) {
 	if err != nil {
 		return Iter{}, err
 	}
-	iter, err := c.srhtClient.List(req, func() interface{} {
+	iter := c.srhtClient.List(req, func() interface{} {
 		return &Paste{}
 	})
-	if err != nil {
-		return Iter{}, err
-	}
 	return Iter{Iter: iter}, nil
 }
