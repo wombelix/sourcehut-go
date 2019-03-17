@@ -6,6 +6,8 @@
 package paste
 
 import (
+	"bytes"
+	"encoding/json"
 	"io"
 	"net/http"
 	"net/url"
@@ -93,35 +95,54 @@ func (c *Client) Version() (string, error) {
 	var ver struct {
 		Version string `json:"version"`
 	}
-	_, err := c.do("GET", "version", nil, &ver)
+	_, err := c.do("GET", "version", "", nil, &ver)
 	return ver.Version, err
 }
 
 // List returns an iterator over all pastes owned by the authenticated user.
 func (c *Client) List() (Iter, error) {
-	path := "pastes"
-	return c.list("GET", path, nil)
+	return c.list("GET", "pastes", nil)
 }
 
 // Get returns information about a paste with the given ID.
 func (c *Client) Get(id string) (Paste, error) {
 	p := Paste{}
-	_, err := c.do("GET", "pastes/"+url.PathEscape(id), nil, &p)
+	_, err := c.do("GET", "pastes/"+url.PathEscape(id), "", nil, &p)
+	return p, err
+}
+
+// New creates an new paste from the list of files.
+func (c *Client) New(f Files) (Paste, error) {
+	p := Paste{}
+	buf := &bytes.Buffer{}
+	e := json.NewEncoder(buf)
+	err := e.Encode(struct {
+		Files Files `json:"files"`
+	}{
+		Files: f,
+	})
+	if err != nil {
+		return Paste{}, err
+	}
+	_, err = c.do("POST", "pastes", "application/json", buf, &p)
 	return p, err
 }
 
 // GetBlob returns information about a particular file in a paste.
 func (c *Client) GetBlob(id string) (Blob, error) {
 	p := Blob{}
-	_, err := c.do("GET", "blobs/"+url.PathEscape(id), nil, &p)
+	_, err := c.do("GET", "blobs/"+url.PathEscape(id), "", nil, &p)
 	return p, err
 }
 
-func (c *Client) do(method, u string, body io.Reader, v interface{}) (*http.Response, error) {
+func (c *Client) do(method, u, contentType string, body io.Reader, v interface{}) (*http.Response, error) {
 	u = c.baseURL.String() + u
 	req, err := http.NewRequest(method, u, body)
 	if err != nil {
 		return nil, err
+	}
+	if contentType != "" {
+		req.Header.Set("Content-Type", contentType)
 	}
 	return c.srhtClient.Do(req, v)
 }
