@@ -1,5 +1,7 @@
+.env
 *.html
 *.out
+srht
 *.svg
 *.test
 *.txt
