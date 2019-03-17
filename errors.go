@@ -16,7 +16,7 @@ type Error struct {
 }
 
 // Error satisfies the error interface for Error.
-func (err *Error) Error() string {
+func (err Error) Error() string {
 	return err.Reason
 }
 
@@ -25,12 +25,5 @@ type Errors []Error
 
 // Error satisfies the error interface for Errors.
 func (err Errors) Error() string {
-	// TODO: I don't love this errors collection thing. Is there a sane way to
-	// implement error for it?
-	// return "Multiple API errors occured"
-	var s string
-	for _, e := range err {
-		s += e.Error() + " :: "
-	}
-	return s
+	return "Multiple API errors occured"
 }

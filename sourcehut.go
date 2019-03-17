@@ -175,6 +175,12 @@ func (c Client) do(req *http.Request) (*http.Response, error) {
 		if err != nil {
 			return resp, err
 		}
+		switch len(e.Errors) {
+		case 0:
+			return resp, nil
+		case 1:
+			return resp, e.Errors[0]
+		}
 		return resp, e.Errors
 	}
 
