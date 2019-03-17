@@ -9,6 +9,7 @@ import (
 	"flag"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"os"
 
 	"git.sr.ht/~samwhited/sourcehut-go"
@@ -55,6 +56,8 @@ func getBlob(client *paste.Client) *cli.Command {
 		Description: `Print or download a file from a paste.
 
 By default file contents are written to stdout.
+If blobs are written to a zip file or to the current working directory and a
+file with the same name already exists, it will be truncated.
 `,
 		Run: func(c *cli.Command, args ...string) error {
 			err := flags.Parse(args)
@@ -99,7 +102,13 @@ By default file contents are written to stdout.
 					}
 					_, err = io.WriteString(w, blob.Contents)
 					if err != nil {
-						return err
+						return fmt.Errorf("Error writing blob %s to %q: %q", blob.ID, zipName, err)
+					}
+					if saveBlobs {
+						err = ioutil.WriteFile(blob.ID, []byte(blob.Contents), 0644)
+						if err != nil {
+							return fmt.Errorf("Error writing blob %s to disk: %q", blob.ID, err)
+						}
 					}
 					continue
 				}
