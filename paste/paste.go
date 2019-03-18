@@ -36,7 +36,6 @@ func SrhtClient(client sourcehut.Client) Option {
 
 // Base returns an option that configures the public SourceHut API URL.
 //
-// If base is not a valid URL, the option panics.
 // If base does not have a trailing slash, one is added automatically.
 // If unspecified, BaseURL is used.
 func Base(base string) Option {
