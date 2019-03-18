@@ -33,7 +33,7 @@ func pasteCmd(srhtClient sourcehut.Client, env envVars) (*cli.Command, error) {
 			getBlob(client),
 			getPasteCmd(client),
 			listPasteCmd(client),
-			versionCmd(client),
+			pasteVersionCmd(client),
 		},
 		Run: func(c *cli.Command, _ ...string) error {
 			c.Help()
@@ -121,7 +121,7 @@ file with the same name already exists, it will be truncated.
 	}
 }
 
-func versionCmd(client *paste.Client) *cli.Command {
+func pasteVersionCmd(client *paste.Client) *cli.Command {
 	return &cli.Command{
 		Usage:       "version",
 		Description: "Shows the version of the paste endpoint.",
