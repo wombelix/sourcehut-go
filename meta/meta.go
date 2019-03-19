@@ -111,6 +111,12 @@ func (c *Client) GetSSHKey(id int64) (SSHKey, error) {
 	return key, err
 }
 
+// DeleteSSH deletes the SSH key with the provided ID.
+func (c *Client) DeleteSSHKey(id int64) error {
+	_, err := c.do("DELETE", "user/ssh-keys/"+strconv.FormatInt(id, 10), "", nil, nil)
+	return err
+}
+
 func (c *Client) do(method, u, contentType string, body io.Reader, v interface{}) (*http.Response, error) {
 	u = c.baseURL.String() + u
 	req, err := http.NewRequest(method, u, body)
