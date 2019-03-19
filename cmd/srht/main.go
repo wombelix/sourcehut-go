@@ -31,6 +31,10 @@ func main() {
 	if err != nil {
 		log.Fatal("Meta URL could not be parsed.")
 	}
+	key, err := keyCmd(srhtClient, env)
+	if err != nil {
+		log.Fatal("Meta URL could not be parsed.")
+	}
 	paste, err := pasteCmd(srhtClient, env)
 	if err != nil {
 		log.Fatal("Paste URL could not be parsed.")
@@ -43,6 +47,7 @@ func main() {
 	cmds.Commands = []*cli.Command{
 		aboutCmd(os.Stdout, version, commit, env),
 		user,
+		key,
 		paste,
 		cli.Help(cmds),
 	}

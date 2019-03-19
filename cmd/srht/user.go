@@ -6,7 +6,6 @@ package main
 
 import (
 	"fmt"
-	"strconv"
 
 	"git.sr.ht/~samwhited/sourcehut-go"
 	"git.sr.ht/~samwhited/sourcehut-go/meta"
@@ -24,10 +23,9 @@ func userCmd(srhtClient sourcehut.Client, env envVars) (*cli.Command, error) {
 
 	return &cli.Command{
 		Usage:       "user <command> [options]",
-		Description: "Get account information.",
+		Description: "Get account information",
 		Commands: []*cli.Command{
 			getUserCmd(client),
-			getSSHKeyCmd(client),
 			metaVersionCmd(client),
 		},
 		Run: func(c *cli.Command, _ ...string) error {
@@ -40,7 +38,7 @@ func userCmd(srhtClient sourcehut.Client, env envVars) (*cli.Command, error) {
 func getUserCmd(client *meta.Client) *cli.Command {
 	return &cli.Command{
 		Usage:       "get",
-		Description: `Show the authenticated users profile.`,
+		Description: `Show the authenticated users profile`,
 		Run: func(c *cli.Command, _ ...string) error {
 			user, err := client.GetUser()
 			if err != nil {
@@ -53,35 +51,10 @@ func getUserCmd(client *meta.Client) *cli.Command {
 	}
 }
 
-func getSSHKeyCmd(client *meta.Client) *cli.Command {
-	return &cli.Command{
-		Usage:       "key <id>",
-		Description: `Show the SSH key with the given ID.`,
-		Run: func(c *cli.Command, args ...string) error {
-			if len(args) != 1 {
-				c.Help()
-				return nil
-			}
-			id, err := strconv.ParseInt(args[0], 10, 64)
-			if err != nil {
-				return err
-			}
-
-			k, err := client.GetSSHKey(id)
-			if err != nil {
-				return err
-			}
-			// TODO: format?
-			fmt.Printf("%+v\n", k)
-			return nil
-		},
-	}
-}
-
 func metaVersionCmd(client *meta.Client) *cli.Command {
 	return &cli.Command{
 		Usage:       "version",
-		Description: "Shows the version of the meta endpoint.",
+		Description: "Shows the version of the meta endpoint",
 		Run: func(c *cli.Command, ids ...string) error {
 			ver, err := client.Version()
 			if err != nil {
