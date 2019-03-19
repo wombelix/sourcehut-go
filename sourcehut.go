@@ -143,9 +143,11 @@ func (c Client) Do(req *http.Request, v interface{}) (*http.Response, error) {
 		resp.Body.Close()
 	}()
 
-	err = json.NewDecoder(resp.Body).Decode(v)
-	if err != nil {
-		return resp, err
+	if v != nil {
+		err = json.NewDecoder(resp.Body).Decode(v)
+		if err != nil {
+			return resp, err
+		}
 	}
 
 	return resp, nil
