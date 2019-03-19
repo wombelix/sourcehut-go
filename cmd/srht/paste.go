@@ -11,6 +11,7 @@ import (
 	"io"
 	"io/ioutil"
 	"os"
+	"path/filepath"
 
 	"git.sr.ht/~samwhited/sourcehut-go"
 	"git.sr.ht/~samwhited/sourcehut-go/paste"
@@ -44,11 +45,11 @@ func pasteCmd(srhtClient sourcehut.Client, env envVars) (*cli.Command, error) {
 
 func getBlob(client *paste.Client) *cli.Command {
 	var (
-		saveBlobs bool
-		zipName   string
+		treeName string
+		zipName  string
 	)
 	flags := flag.NewFlagSet("blob", flag.ContinueOnError)
-	flags.BoolVar(&saveBlobs, "O", false, "Write blob contents to the current working directory")
+	flags.StringVar(&treeName, "O", "", "Save blob contents to the filesystem")
 	flags.StringVar(&zipName, "o", "", "Write blob contents to the named zip file")
 
 	return &cli.Command{
@@ -72,7 +73,7 @@ file with the same name already exists, it will be truncated.
 				return nil
 			}
 
-			return getBlobs(client, saveBlobs, zipName, ids...)
+			return getBlobs(client, treeName, zipName, ids...)
 		},
 	}
 }
@@ -114,11 +115,11 @@ func listPasteCmd(client *paste.Client) *cli.Command {
 
 func getPasteCmd(client *paste.Client) *cli.Command {
 	var (
-		saveBlobs bool
-		zipName   string
+		treeName string
+		zipName  string
 	)
 	flags := flag.NewFlagSet("get", flag.ContinueOnError)
-	flags.BoolVar(&saveBlobs, "O", false, "Save the paste to the current working directory")
+	flags.StringVar(&treeName, "O", "", "Save blob contents to the filesystem")
 	flags.StringVar(&zipName, "o", "", "Save the paste to the provided zip file")
 
 	return &cli.Command{
@@ -146,12 +147,12 @@ func getPasteCmd(client *paste.Client) *cli.Command {
 					continue
 				}
 
-				if saveBlobs || zipName != "" {
+				if treeName != "" || zipName != "" {
 					ids := make([]string, 0, len(paste.Files))
 					for _, f := range paste.Files {
 						ids = append(ids, f.ID)
 					}
-					return getBlobs(client, saveBlobs, zipName, ids...)
+					return getBlobs(client, treeName, zipName, ids...)
 				}
 
 				// If we're not saving the paste, just print it and don't bother looking
@@ -166,7 +167,7 @@ func getPasteCmd(client *paste.Client) *cli.Command {
 
 // TODO: support downloading with the correct (sanitized) name if available.
 
-func getBlobs(client *paste.Client, saveBlobs bool, zipName string, ids ...string) error {
+func getBlobs(client *paste.Client, treeName, zipName string, ids ...string) error {
 	// Create a zip file if -o was specified.
 	var zipWriter *zip.Writer
 	if zipName != "" {
@@ -201,13 +202,13 @@ func getBlobs(client *paste.Client, saveBlobs bool, zipName string, ids ...strin
 				return fmt.Errorf("Error writing blob %s to %q: %q", blob.ID, zipName, err)
 			}
 		}
-		if saveBlobs {
-			err = ioutil.WriteFile(blob.ID, []byte(blob.Contents), 0644)
+		if treeName != "" {
+			err = ioutil.WriteFile(filepath.Join(treeName, blob.ID), []byte(blob.Contents), 0644)
 			if err != nil {
 				return fmt.Errorf("Error writing blob %s to disk: %q", blob.ID, err)
 			}
 		}
-		if saveBlobs || zipWriter != nil {
+		if treeName != "" || zipWriter != nil {
 			continue
 		}
 
