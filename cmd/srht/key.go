@@ -27,6 +27,7 @@ func keyCmd(srhtClient sourcehut.Client, env envVars) (*cli.Command, error) {
 		Description: "Account SSH key commands",
 		Commands: []*cli.Command{
 			getSSHKeyCmd(client),
+			deleteSSHKeyCmd(client),
 		},
 		Run: func(c *cli.Command, _ ...string) error {
 			c.Help()
@@ -56,6 +57,25 @@ func getSSHKeyCmd(client *meta.Client) *cli.Command {
 			// TODO: format?
 			fmt.Printf("%+v\n", k)
 			return nil
+		},
+	}
+}
+
+func deleteSSHKeyCmd(client *meta.Client) *cli.Command {
+	return &cli.Command{
+		Usage:       "delete <id>",
+		Description: `Delete the SSH key with the given ID`,
+		Run: func(c *cli.Command, args ...string) error {
+			if len(args) != 1 {
+				c.Help()
+				return nil
+			}
+			id, err := strconv.ParseInt(args[0], 10, 64)
+			if err != nil {
+				return err
+			}
+
+			return client.DeleteSSHKey(id)
 		},
 	}
 }
