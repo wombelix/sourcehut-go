@@ -6,6 +6,8 @@
 package meta
 
 import (
+	"bytes"
+	"encoding/json"
 	"io"
 	"net/http"
 	"net/url"
@@ -117,6 +119,29 @@ func (c *Client) DeleteSSHKey(id int64) error {
 	return err
 }
 
+// NewSSHKey creates a new SSH key.
+// The key should be in authorized_keys format.
+func (c *Client) NewSSHKey(k string) (SSHKey, error) {
+	key := SSHKey{}
+	jsonKey, err := json.Marshal(struct {
+		Key string `json:"ssh-key"`
+	}{
+		Key: k,
+	})
+	if err != nil {
+		return key, err
+	}
+
+	_, err = c.do("POST", "user/ssh-keys", "application/json", bytes.NewReader(jsonKey), &key)
+	return key, err
+}
+
+// ListSSHKeys returns an iterator over all SSH keys authorized on the users
+// account.
+func (c *Client) ListSSHKeys() (SSHKeyIter, error) {
+	return c.sshKeys("GET", "user/ssh-keys", nil)
+}
+
 func (c *Client) do(method, u, contentType string, body io.Reader, v interface{}) (*http.Response, error) {
 	u = c.baseURL.String() + u
 	req, err := http.NewRequest(method, u, body)
@@ -127,4 +152,16 @@ func (c *Client) do(method, u, contentType string, body io.Reader, v interface{}
 		req.Header.Set("Content-Type", contentType)
 	}
 	return c.srhtClient.Do(req, v)
+}
+
+func (c *Client) sshKeys(method, u string, body io.Reader) (SSHKeyIter, error) {
+	u = c.baseURL.String() + u
+	req, err := http.NewRequest(method, u, body)
+	if err != nil {
+		return SSHKeyIter{}, err
+	}
+	iter := c.srhtClient.List(req, func() interface{} {
+		return &SSHKey{}
+	})
+	return SSHKeyIter{Iter: iter}, nil
 }
