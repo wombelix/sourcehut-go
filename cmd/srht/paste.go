@@ -53,6 +53,7 @@ func getBlob(client *paste.Client) *cli.Command {
 
 	return &cli.Command{
 		Usage: "blob [options] id [id2 id3…]",
+		Flags: flags,
 		Description: `Print or download a file from a paste
 
 By default file contents are written to stdout.
