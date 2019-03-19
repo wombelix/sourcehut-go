@@ -4,6 +4,12 @@
 
 package lists
 
+import (
+	"time"
+
+	"git.sr.ht/~samwhited/sourcehut-go"
+)
+
 // ShortList represents the unexpanded form of a mailing list.
 type ShortList struct {
 	Name  string              `json:"name"`

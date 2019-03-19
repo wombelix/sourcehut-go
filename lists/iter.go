@@ -5,8 +5,6 @@
 package lists
 
 import (
-	"time"
-
 	"git.sr.ht/~samwhited/sourcehut-go"
 )
 
