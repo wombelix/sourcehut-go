@@ -17,3 +17,13 @@ type SSHKeyIter struct {
 func (i SSHKeyIter) Key() SSHKey {
 	return *(i.Current().(*SSHKey))
 }
+
+// PGPKeyIter is used for iterating over the account's PGP keys.
+type PGPKeyIter struct {
+	*sourcehut.Iter
+}
+
+// Key returns the PGP key which the iterator is currently pointing to.
+func (i PGPKeyIter) Key() PGPKey {
+	return *(i.Current().(*PGPKey))
+}

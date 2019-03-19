@@ -27,3 +27,14 @@ type SSHKey struct {
 	Owner       sourcehut.ShortUser `json:"owner"`
 	LastUsed    time.Time           `json:"last_used"`
 }
+
+// PGPKey contains information about an PGP key.
+type PGPKey struct {
+	ID         int64               `json:"id"`
+	Authorized time.Time           `json:"authorized"`
+	Email      string              `json:"email"`
+	KeyID      string              `json:"key_id"`
+	Key        string              `json:"key"`
+	LastUsed   time.Time           `json:"last_used"`
+	Owner      sourcehut.ShortUser `json:"owner"`
+}
