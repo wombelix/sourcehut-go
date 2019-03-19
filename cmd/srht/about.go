@@ -16,7 +16,7 @@ import (
 func aboutCmd(w io.Writer, version, commit string, env envVars) *cli.Command {
 	return &cli.Command{
 		Usage:       "about",
-		Description: "Show information about srht.",
+		Description: "Show information about srht",
 		Run: func(c *cli.Command, _ ...string) error {
 			fmt.Fprintf(w, `SourceHut (%s)
 

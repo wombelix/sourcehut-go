@@ -28,7 +28,7 @@ func pasteCmd(srhtClient sourcehut.Client, env envVars) (*cli.Command, error) {
 
 	return &cli.Command{
 		Usage:       "paste <command> [options]",
-		Description: "Create or download pastes.",
+		Description: "Create or download pastes",
 		Commands: []*cli.Command{
 			getBlob(client),
 			getPasteCmd(client),
@@ -53,7 +53,7 @@ func getBlob(client *paste.Client) *cli.Command {
 
 	return &cli.Command{
 		Usage: "blob [options] id [id2 id3…]",
-		Description: `Print or download a file from a paste.
+		Description: `Print or download a file from a paste
 
 By default file contents are written to stdout.
 If blobs are written to a zip file or to the current working directory and a
@@ -124,7 +124,7 @@ file with the same name already exists, it will be truncated.
 func pasteVersionCmd(client *paste.Client) *cli.Command {
 	return &cli.Command{
 		Usage:       "version",
-		Description: "Shows the version of the paste endpoint.",
+		Description: "Shows the version of the paste endpoint",
 		Run: func(c *cli.Command, ids ...string) error {
 			ver, err := client.Version()
 			if err != nil {
@@ -139,7 +139,7 @@ func pasteVersionCmd(client *paste.Client) *cli.Command {
 func listPasteCmd(client *paste.Client) *cli.Command {
 	return &cli.Command{
 		Usage:       "list",
-		Description: "List pastes owned by the authenticated user.",
+		Description: "List pastes owned by the authenticated user",
 		Run: func(c *cli.Command, ids ...string) error {
 			iter, err := client.List()
 			if err != nil {
@@ -159,7 +159,7 @@ func listPasteCmd(client *paste.Client) *cli.Command {
 func getPasteCmd(client *paste.Client) *cli.Command {
 	return &cli.Command{
 		Usage:       "get id [id2 id3…]",
-		Description: "Show one or more pastes.",
+		Description: "Show one or more pastes",
 		Run: func(c *cli.Command, ids ...string) error {
 			if len(ids) == 0 {
 				c.Help()
