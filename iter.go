@@ -105,6 +105,12 @@ func (i *Iter) Next() bool {
 		}
 	}
 
+	// If we just fetched the list, but there's nothing in it ('[]'), don't try to
+	// decode an element.
+	if !i.d.More() {
+		return false
+	}
+
 	i.err = i.d.Decode(&v)
 	i.v = v
 	return i.err == nil
