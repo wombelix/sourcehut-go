@@ -72,52 +72,7 @@ file with the same name already exists, it will be truncated.
 				return nil
 			}
 
-			// Create a zip file if -o was specified.
-			var zipWriter *zip.Writer
-			if zipName != "" {
-				zipFile, err := os.Create(zipName)
-				if err != nil {
-					return fmt.Errorf("Error creating output file %q: %q", zipName, err)
-				}
-				defer zipFile.Close()
-				zipWriter = zip.NewWriter(zipFile)
-				defer zipWriter.Close()
-			}
-
-			for _, id := range ids {
-				blob, err := client.GetBlob(id)
-				if err != nil {
-					// TODO: should this exit immediately, finish but return a non-zero
-					// status, etc?
-					fmt.Fprintf(os.Stderr, "Error fetching blob %s: %q\n", id, err)
-					continue
-				}
-
-				if zipWriter != nil {
-					w, err := zipWriter.CreateHeader(&zip.FileHeader{
-						Name:     blob.ID,
-						Modified: blob.Created,
-					})
-					if err != nil {
-						return err
-					}
-					_, err = io.WriteString(w, blob.Contents)
-					if err != nil {
-						return fmt.Errorf("Error writing blob %s to %q: %q", blob.ID, zipName, err)
-					}
-					if saveBlobs {
-						err = ioutil.WriteFile(blob.ID, []byte(blob.Contents), 0644)
-						if err != nil {
-							return fmt.Errorf("Error writing blob %s to disk: %q", blob.ID, err)
-						}
-					}
-					continue
-				}
-
-				// TODO: how should blobs be formatted?
-				fmt.Printf("%+v\n", blob)
-			}
-			return nil
+			return getBlobs(client, saveBlobs, zipName, ids...)
 		},
 	}
 }
@@ -158,10 +113,25 @@ func listPasteCmd(client *paste.Client) *cli.Command {
 }
 
 func getPasteCmd(client *paste.Client) *cli.Command {
+	var (
+		saveBlobs bool
+		zipName   string
+	)
+	flags := flag.NewFlagSet("get", flag.ContinueOnError)
+	flags.BoolVar(&saveBlobs, "O", false, "Save the paste to the current working directory")
+	flags.StringVar(&zipName, "o", "", "Save the paste to the provided zip file")
+
 	return &cli.Command{
 		Usage:       "get id [id2 id3…]",
+		Flags:       flags,
 		Description: "Show one or more pastes",
-		Run: func(c *cli.Command, ids ...string) error {
+		Run: func(c *cli.Command, args ...string) error {
+			err := flags.Parse(args)
+			if err != nil {
+				return err
+			}
+			ids := flags.Args()
+
 			if len(ids) == 0 {
 				c.Help()
 				return nil
@@ -176,10 +146,74 @@ func getPasteCmd(client *paste.Client) *cli.Command {
 					continue
 				}
 
+				if saveBlobs || zipName != "" {
+					ids := make([]string, 0, len(paste.Files))
+					for _, f := range paste.Files {
+						ids = append(ids, f.ID)
+					}
+					return getBlobs(client, saveBlobs, zipName, ids...)
+				}
+
+				// If we're not saving the paste, just print it and don't bother looking
+				// up its individual blobs.
 				// TODO: how should pastes be formatted?
 				fmt.Printf("%+v\n", paste)
 			}
 			return nil
 		},
 	}
+}
+
+// TODO: support downloading with the correct (sanitized) name if available.
+
+func getBlobs(client *paste.Client, saveBlobs bool, zipName string, ids ...string) error {
+	// Create a zip file if -o was specified.
+	var zipWriter *zip.Writer
+	if zipName != "" {
+		zipFile, err := os.Create(zipName)
+		if err != nil {
+			return fmt.Errorf("Error creating output file %q: %q", zipName, err)
+		}
+		defer zipFile.Close()
+		zipWriter = zip.NewWriter(zipFile)
+		defer zipWriter.Close()
+	}
+
+	for _, id := range ids {
+		blob, err := client.GetBlob(id)
+		if err != nil {
+			// TODO: should this exit immediately, finish but return a non-zero
+			// status, etc?
+			fmt.Fprintf(os.Stderr, "Error fetching blob %s: %q\n", id, err)
+			continue
+		}
+
+		if zipWriter != nil {
+			w, err := zipWriter.CreateHeader(&zip.FileHeader{
+				Name:     blob.ID,
+				Modified: blob.Created,
+			})
+			if err != nil {
+				return err
+			}
+			_, err = io.WriteString(w, blob.Contents)
+			if err != nil {
+				return fmt.Errorf("Error writing blob %s to %q: %q", blob.ID, zipName, err)
+			}
+		}
+		if saveBlobs {
+			err = ioutil.WriteFile(blob.ID, []byte(blob.Contents), 0644)
+			if err != nil {
+				return fmt.Errorf("Error writing blob %s to disk: %q", blob.ID, err)
+			}
+		}
+		if saveBlobs || zipWriter != nil {
+			continue
+		}
+
+		// TODO: how should blobs be formatted?
+		fmt.Printf("%+v\n", blob)
+	}
+
+	return nil
 }
