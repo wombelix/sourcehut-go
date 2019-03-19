@@ -9,6 +9,7 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"strconv"
 	"strings"
 
 	"git.sr.ht/~samwhited/sourcehut-go"
@@ -101,6 +102,13 @@ func (c *Client) GetUser() (User, error) {
 	user := User{}
 	_, err := c.do("GET", "user/profile", "", nil, &user)
 	return user, err
+}
+
+// GetSSH returns the SSH key with the provided ID.
+func (c *Client) GetSSHKey(id int64) (SSHKey, error) {
+	key := SSHKey{}
+	_, err := c.do("GET", "user/ssh-keys/"+strconv.FormatInt(id, 10), "", nil, &key)
+	return key, err
 }
 
 func (c *Client) do(method, u, contentType string, body io.Reader, v interface{}) (*http.Response, error) {

@@ -5,6 +5,8 @@
 package meta
 
 import (
+	"time"
+
 	"git.sr.ht/~samwhited/sourcehut-go"
 )
 
@@ -13,4 +15,15 @@ type User struct {
 	sourcehut.User
 
 	UsePGPKey string `json:"use_pgp_key"`
+}
+
+// SSHKey contains information about an SSH key.
+type SSHKey struct {
+	ID          int64               `json:"id"`
+	Authorized  time.Time           `json:"authorized"`
+	Comment     string              `json:"comment"`
+	Fingerprint string              `json:"fingerprint"`
+	Key         string              `json:"key"`
+	Owner       sourcehut.ShortUser `json:"owner"`
+	LastUsed    time.Time           `json:"last_used"`
 }
