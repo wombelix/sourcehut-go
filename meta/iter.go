@@ -27,3 +27,13 @@ type PGPKeyIter struct {
 func (i PGPKeyIter) Key() PGPKey {
 	return *(i.Current().(*PGPKey))
 }
+
+// AuditLogIter is used for iterating over the account's PGP keys.
+type AuditLogIter struct {
+	*sourcehut.Iter
+}
+
+// Log returns the audit log entry which the iterator is currently pointing to.
+func (i AuditLogIter) Log() AuditLog {
+	return *(i.Current().(*AuditLog))
+}

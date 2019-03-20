@@ -38,3 +38,12 @@ type PGPKey struct {
 	LastUsed   time.Time           `json:"last_used"`
 	Owner      sourcehut.ShortUser `json:"owner"`
 }
+
+// AuditLog represents a single entry in the audit log.
+type AuditLog struct {
+	ID      int64     `json:"id"`
+	IP      string    `json:"ip"`
+	Action  string    `json:"action"`
+	Details string    `json:"details"`
+	Created time.Time `json:"created"`
+}
