@@ -26,6 +26,7 @@ func userCmd(srhtClient sourcehut.Client, env envVars) (*cli.Command, error) {
 		Description: "Get account information",
 		Commands: []*cli.Command{
 			getUserCmd(client),
+			listAuditLogsCmd(client),
 			metaVersionCmd(client),
 		},
 		Run: func(c *cli.Command, _ ...string) error {
@@ -62,6 +63,29 @@ func metaVersionCmd(client *meta.Client) *cli.Command {
 			}
 			fmt.Println(ver)
 			return nil
+		},
+	}
+}
+
+func listAuditLogsCmd(client *meta.Client) *cli.Command {
+	return &cli.Command{
+		Usage:       "log",
+		Description: `Lists audit logs`,
+		Run: func(c *cli.Command, args ...string) error {
+			if len(args) != 0 {
+				c.Help()
+				return errWrongArgs
+			}
+
+			iter, err := client.ListAuditLog()
+			if err != nil {
+				return err
+			}
+			for iter.Next() {
+				// TODO: format?
+				fmt.Printf("%+v\n", iter.Log())
+			}
+			return iter.Err()
 		},
 	}
 }
