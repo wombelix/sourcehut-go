@@ -6,6 +6,8 @@
 package meta
 
 import (
+	"bytes"
+	"encoding/json"
 	"io"
 	"net/http"
 	"net/url"
@@ -101,6 +103,28 @@ func (c *Client) GetUser() (User, error) {
 	user := User{}
 	_, err := c.do("GET", "user/profile", "", nil, &user)
 	return user, err
+}
+
+// ProfileParams is like sourcehut.User except that it omits the username fields
+// and allows nil values for some fields that should not be updated.
+type ProfileParams struct {
+	Email    *string `json:"email,omitempty"`
+	URL      *string `json:"url,omitempty"`
+	Location *string `json:"location,omitempty"`
+	Bio      *string `json:"bio,omitempty"`
+}
+
+// UpdateUser sets information about the user.
+// Nil values indicate that the field should not be updated.
+// If the email field is updated it will trigger a confirmation email.
+func (c *Client) UpdateUser(user ProfileParams) (User, error) {
+	newUser := User{}
+	j, err := json.Marshal(user)
+	if err != nil {
+		return newUser, err
+	}
+	_, err = c.do("PUT", "user/profile", "application/json", bytes.NewReader(j), &newUser)
+	return newUser, err
 }
 
 func (c *Client) do(method, u, contentType string, body io.Reader, v interface{}) (*http.Response, error) {
