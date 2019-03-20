@@ -7,6 +7,8 @@ package meta
 import (
 	"bytes"
 	"encoding/json"
+	"io"
+	"net/http"
 	"strconv"
 )
 
@@ -44,4 +46,16 @@ func (c *Client) NewSSHKey(k string) (SSHKey, error) {
 // account.
 func (c *Client) ListSSHKeys() (SSHKeyIter, error) {
 	return c.sshKeys("GET", "user/ssh-keys", nil)
+}
+
+func (c *Client) sshKeys(method, u string, body io.Reader) (SSHKeyIter, error) {
+	u = c.baseURL.String() + u
+	req, err := http.NewRequest(method, u, body)
+	if err != nil {
+		return SSHKeyIter{}, err
+	}
+	iter := c.srhtClient.List(req, func() interface{} {
+		return &SSHKey{}
+	})
+	return SSHKeyIter{Iter: iter}, nil
 }

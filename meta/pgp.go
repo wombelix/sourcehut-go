@@ -7,6 +7,8 @@ package meta
 import (
 	"bytes"
 	"encoding/json"
+	"io"
+	"net/http"
 	"strconv"
 )
 
@@ -44,4 +46,16 @@ func (c *Client) NewPGPKey(k string) (PGPKey, error) {
 // account.
 func (c *Client) ListPGPKeys() (PGPKeyIter, error) {
 	return c.pgpKeys("GET", "user/pgp-keys", nil)
+}
+
+func (c *Client) pgpKeys(method, u string, body io.Reader) (PGPKeyIter, error) {
+	u = c.baseURL.String() + u
+	req, err := http.NewRequest(method, u, body)
+	if err != nil {
+		return PGPKeyIter{}, err
+	}
+	iter := c.srhtClient.List(req, func() interface{} {
+		return &PGPKey{}
+	})
+	return PGPKeyIter{Iter: iter}, nil
 }

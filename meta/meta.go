@@ -114,27 +114,3 @@ func (c *Client) do(method, u, contentType string, body io.Reader, v interface{}
 	}
 	return c.srhtClient.Do(req, v)
 }
-
-func (c *Client) sshKeys(method, u string, body io.Reader) (SSHKeyIter, error) {
-	u = c.baseURL.String() + u
-	req, err := http.NewRequest(method, u, body)
-	if err != nil {
-		return SSHKeyIter{}, err
-	}
-	iter := c.srhtClient.List(req, func() interface{} {
-		return &SSHKey{}
-	})
-	return SSHKeyIter{Iter: iter}, nil
-}
-
-func (c *Client) pgpKeys(method, u string, body io.Reader) (PGPKeyIter, error) {
-	u = c.baseURL.String() + u
-	req, err := http.NewRequest(method, u, body)
-	if err != nil {
-		return PGPKeyIter{}, err
-	}
-	iter := c.srhtClient.List(req, func() interface{} {
-		return &PGPKey{}
-	})
-	return PGPKeyIter{Iter: iter}, nil
-}
