@@ -113,10 +113,3 @@ func (i *Iter) Next() bool {
 	i.err = i.d.Decode(&i.v)
 	return i.err == nil
 }
-
-// Response returns the last response received from the SourceHut API by the
-// iter.
-func (i *Iter) Response() *Response {
-	// TODO: clone this.
-	return i.resp
-}
