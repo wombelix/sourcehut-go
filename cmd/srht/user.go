@@ -23,7 +23,7 @@ func userCmd(srhtClient sourcehut.Client, env envVars) (*cli.Command, error) {
 
 	return &cli.Command{
 		Usage:       "user <command> [options]",
-		Description: "Get account information",
+		Description: "Get account information.",
 		Commands: []*cli.Command{
 			getUserCmd(client),
 			listAuditLogsCmd(client),
@@ -39,7 +39,7 @@ func userCmd(srhtClient sourcehut.Client, env envVars) (*cli.Command, error) {
 func getUserCmd(client *meta.Client) *cli.Command {
 	return &cli.Command{
 		Usage:       "get",
-		Description: `Show the authenticated users profile`,
+		Description: `Show the authenticated users profile.`,
 		Run: func(c *cli.Command, _ ...string) error {
 			user, err := client.GetUser()
 			if err != nil {
@@ -55,7 +55,7 @@ func getUserCmd(client *meta.Client) *cli.Command {
 func metaVersionCmd(client *meta.Client) *cli.Command {
 	return &cli.Command{
 		Usage:       "version",
-		Description: "Shows the version of the meta endpoint",
+		Description: "Shows the version of the meta endpoint.",
 		Run: func(c *cli.Command, ids ...string) error {
 			ver, err := client.Version()
 			if err != nil {
@@ -70,7 +70,7 @@ func metaVersionCmd(client *meta.Client) *cli.Command {
 func listAuditLogsCmd(client *meta.Client) *cli.Command {
 	return &cli.Command{
 		Usage:       "log",
-		Description: `Lists audit logs`,
+		Description: `Lists audit logs.`,
 		Run: func(c *cli.Command, args ...string) error {
 			if len(args) != 0 {
 				c.Help()

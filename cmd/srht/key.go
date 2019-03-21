@@ -28,7 +28,7 @@ func keyCmd(srhtClient sourcehut.Client, env envVars) (*cli.Command, error) {
 
 	return &cli.Command{
 		Usage:       "key <command> [options]",
-		Description: "Account SSH key commands",
+		Description: "Account SSH key commands.",
 		Commands: []*cli.Command{
 			deleteSSHKeyCmd(client),
 			getSSHKeyCmd(client),
@@ -45,7 +45,7 @@ func keyCmd(srhtClient sourcehut.Client, env envVars) (*cli.Command, error) {
 func getSSHKeyCmd(client *meta.Client) *cli.Command {
 	return &cli.Command{
 		Usage:       "get <id>",
-		Description: `Show the SSH key with the given ID`,
+		Description: `Show the SSH key with the given ID.`,
 		Run: func(c *cli.Command, args ...string) error {
 			if len(args) != 1 {
 				c.Help()
@@ -70,7 +70,7 @@ func getSSHKeyCmd(client *meta.Client) *cli.Command {
 func deleteSSHKeyCmd(client *meta.Client) *cli.Command {
 	return &cli.Command{
 		Usage:       "delete <id>",
-		Description: `Delete the SSH key with the given ID`,
+		Description: `Delete the SSH key with the given ID.`,
 		Run: func(c *cli.Command, args ...string) error {
 			if len(args) != 1 {
 				c.Help()
@@ -89,7 +89,7 @@ func deleteSSHKeyCmd(client *meta.Client) *cli.Command {
 func newSSHKeyCmd(client *meta.Client) *cli.Command {
 	return &cli.Command{
 		Usage:       "new <key (authorized_keys format)>",
-		Description: `Authorize a new SSH key`,
+		Description: `Authorize a new SSH key.`,
 		Run: func(c *cli.Command, args ...string) error {
 			if len(args) != 1 {
 				c.Help()
@@ -110,7 +110,7 @@ func newSSHKeyCmd(client *meta.Client) *cli.Command {
 func listSSHKeyCmd(client *meta.Client) *cli.Command {
 	return &cli.Command{
 		Usage:       "list",
-		Description: `List all authorized SSH keys`,
+		Description: `List all authorized SSH keys.`,
 		Run: func(c *cli.Command, args ...string) error {
 			if len(args) != 0 {
 				c.Help()

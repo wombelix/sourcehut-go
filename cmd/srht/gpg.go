@@ -24,7 +24,7 @@ func pgpCmd(srhtClient sourcehut.Client, env envVars) (*cli.Command, error) {
 
 	return &cli.Command{
 		Usage:       "pgp <command> [options]",
-		Description: "Account PGP key commands",
+		Description: "Account PGP key commands.",
 		Commands: []*cli.Command{
 			deletePGPKeyCmd(client),
 			getPGPKeyCmd(client),
@@ -41,7 +41,7 @@ func pgpCmd(srhtClient sourcehut.Client, env envVars) (*cli.Command, error) {
 func getPGPKeyCmd(client *meta.Client) *cli.Command {
 	return &cli.Command{
 		Usage:       "get <id>",
-		Description: `Show the PGP key with the given ID`,
+		Description: `Show the PGP key with the given ID.`,
 		Run: func(c *cli.Command, args ...string) error {
 			if len(args) != 1 {
 				c.Help()
@@ -66,7 +66,7 @@ func getPGPKeyCmd(client *meta.Client) *cli.Command {
 func deletePGPKeyCmd(client *meta.Client) *cli.Command {
 	return &cli.Command{
 		Usage:       "delete <id>",
-		Description: `Delete the PGP key with the given ID`,
+		Description: `Delete the PGP key with the given ID.`,
 		Run: func(c *cli.Command, args ...string) error {
 			if len(args) != 1 {
 				c.Help()
@@ -85,7 +85,7 @@ func deletePGPKeyCmd(client *meta.Client) *cli.Command {
 func newPGPKeyCmd(client *meta.Client) *cli.Command {
 	return &cli.Command{
 		Usage:       "new <key (authorized_keys format)>",
-		Description: `Authorize a new PGP key`,
+		Description: `Authorize a new PGP key.`,
 		Run: func(c *cli.Command, args ...string) error {
 			if len(args) != 1 {
 				c.Help()
@@ -106,7 +106,7 @@ func newPGPKeyCmd(client *meta.Client) *cli.Command {
 func listPGPKeyCmd(client *meta.Client) *cli.Command {
 	return &cli.Command{
 		Usage:       "list",
-		Description: `List all authorized PGP keys`,
+		Description: `List all authorized PGP keys.`,
 		Run: func(c *cli.Command, args ...string) error {
 			if len(args) != 0 {
 				c.Help()
