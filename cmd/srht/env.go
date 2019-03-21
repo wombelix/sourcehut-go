@@ -27,7 +27,10 @@ type envVars struct {
 
 func (env envVars) String() string {
 	redactedToken := "…"
-	if len(env.token) > 8 {
+	switch {
+	case len(env.token) == 0:
+		redactedToken = ""
+	case len(env.token) > 8:
 		redactedToken = env.token[:8] + redactedToken
 	}
 	return fmt.Sprintf(`SRHT_TOKEN	= %q
