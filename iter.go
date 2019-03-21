@@ -60,11 +60,10 @@ func (i *Iter) Next() bool {
 		return false
 	}
 
-	var v interface{}
 	if i.into == nil {
-		v = make(map[string]interface{})
+		i.v = make(map[string]interface{})
 	} else {
-		v = i.into()
+		i.v = i.into()
 	}
 
 	if i.d == nil || !i.d.More() {
@@ -111,8 +110,7 @@ func (i *Iter) Next() bool {
 		return false
 	}
 
-	i.err = i.d.Decode(&v)
-	i.v = v
+	i.err = i.d.Decode(&i.v)
 	return i.err == nil
 }
 
