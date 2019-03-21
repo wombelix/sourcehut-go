@@ -11,6 +11,10 @@ import (
 	"strings"
 )
 
+var (
+	errWantArray = errors.New("expected json array in response")
+)
+
 // Response is a SourceHut API response.
 // This wraps the standard http.Response and provides convenient access to
 // pagination links.
@@ -99,7 +103,7 @@ func (i *Iter) Next() bool {
 			return false
 		}
 		if delim, ok := tok.(json.Delim); !ok || delim != '[' {
-			i.err = errors.New("Expected json array in response")
+			i.err = errWantArray
 			return false
 		}
 	}

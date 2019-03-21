@@ -58,9 +58,22 @@ var iterTests = [...]iterTest{
   "results_per_page": 50,
   "total": 2
 }`},
-		//d: func() interface{} { return struct{}{} },
-		//vals: []interface{}{struct{}{}, struct{}{}},
 		vals: []interface{}{make(map[string]interface{}), make(map[string]interface{}), make(map[string]interface{}), make(map[string]interface{})},
+	},
+	7: {
+		body: []string{`{
+  "results": [],
+  "results_per_page": 50,
+  "total": 2
+}`},
+	},
+	8: {
+		body: []string{`{
+  "results": "wat",
+  "results_per_page": 50,
+  "total": 2
+}`},
+		err: sourcehut.ErrWantArray,
 	},
 }
 
@@ -113,7 +126,11 @@ func doIterTest(t *testing.T, u string, client sourcehut.Client, tc iterTest) {
 		}
 		i++
 	}
-	if err := iter.Err(); !reflect.DeepEqual(err, tc.err) {
+	err = iter.Err()
+	if !reflect.DeepEqual(err, tc.err) {
 		t.Fatalf("Unexpected err: want=%q, got=%q", tc.err, err)
+	}
+	if err != nil && iter.Next() {
+		t.Fatalf("Next unexpectedly returned true after error")
 	}
 }
