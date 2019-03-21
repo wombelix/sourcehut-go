@@ -13,6 +13,7 @@ import (
 	"testing"
 
 	"git.sr.ht/~samwhited/sourcehut-go"
+	"git.sr.ht/~samwhited/sourcehut-go/internal/testlog"
 )
 
 type iterTest struct {
@@ -84,7 +85,7 @@ func TestIter(t *testing.T) {
 				}
 				served++
 			}))
-			server.Config.ErrorLog = NewTestLog(t)
+			server.Config.ErrorLog = testlog.New(t)
 			server.Start()
 			client := server.Client()
 			srhtClient := sourcehut.NewBaseClient(client)
