@@ -1,6 +1,6 @@
 module git.sr.ht/~samwhited/sourcehut-go/cmd/srht
 
-go 1.10
+go 1.11
 
 require (
 	git.sr.ht/~samwhited/sourcehut-go v0.0.0
