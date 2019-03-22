@@ -5,8 +5,6 @@ sources:
   - https://git.sr.ht/~samwhited/sourcehut-go
 environment:
   GO111MODULE: 'on'
-secrets:
-  - 8d37edda-226f-46de-b76f-16c143013d95
 tasks:
   - setup: |
       go version
