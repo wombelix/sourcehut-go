@@ -1,0 +1,33 @@
+image: freebsd/latest
+packages:
+  - go
+sources:
+  - https://git.sr.ht/~samwhited/sourcehut-go
+environment:
+  GO111MODULE: 'on'
+secrets:
+  - 8d37edda-226f-46de-b76f-16c143013d95
+tasks:
+  - setup: |
+      go version
+      go env
+      go get -u golang.org/x/lint/golint
+      go get -u github.com/securego/gosec/cmd/gosec
+  - test: |
+      cd sourcehut-go/
+      go test -v ./...
+  - lint: |
+      cd sourcehut-go/
+      `go env GOPATH`/bin/golint -set_exit_status ./...
+  - vet: |
+      cd sourcehut-go/
+      go vet ./...
+  - fmt: |
+      cd sourcehut-go/
+      gofmt -s -l . && [ -z "$(gofmt -s -l .)" ]
+  - gosec: |
+      cd sourcehut-go/
+      gosec ./...
+  - build: |
+      cd sourcehut-go/
+      make
