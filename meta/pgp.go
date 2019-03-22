@@ -12,14 +12,14 @@ import (
 	"strconv"
 )
 
-// GetPGP returns the PGP key with the provided ID.
+// GetPGPKey returns the PGP key with the provided ID.
 func (c *Client) GetPGPKey(id int64) (PGPKey, error) {
 	key := PGPKey{}
 	_, err := c.do("GET", "user/pgp-keys/"+strconv.FormatInt(id, 10), "", nil, &key)
 	return key, err
 }
 
-// DeletePGP deletes the PGP key with the provided ID.
+// DeletePGPKey deletes the PGP key with the provided ID.
 func (c *Client) DeletePGPKey(id int64) error {
 	_, err := c.do("DELETE", "user/pgp-keys/"+strconv.FormatInt(id, 10), "", nil, nil)
 	return err

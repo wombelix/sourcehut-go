@@ -12,14 +12,14 @@ import (
 	"strconv"
 )
 
-// GetSSH returns the SSH key with the provided ID.
+// GetSSHKey returns the SSH key with the provided ID.
 func (c *Client) GetSSHKey(id int64) (SSHKey, error) {
 	key := SSHKey{}
 	_, err := c.do("GET", "user/ssh-keys/"+strconv.FormatInt(id, 10), "", nil, &key)
 	return key, err
 }
 
-// DeleteSSH deletes the SSH key with the provided ID.
+// DeleteSSHKey deletes the SSH key with the provided ID.
 func (c *Client) DeleteSSHKey(id int64) error {
 	_, err := c.do("DELETE", "user/ssh-keys/"+strconv.FormatInt(id, 10), "", nil, nil)
 	return err
