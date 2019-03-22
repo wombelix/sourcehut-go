@@ -25,7 +25,7 @@ tasks:
       gofmt -s -l . && [ -z "$(gofmt -s -l .)" ]
   - gosec: |
       cd sourcehut-go/
-      gosec ./...
+      `go env GOPATH`/bin/gosec ./...
   - build: |
       cd sourcehut-go/
       make
