@@ -109,13 +109,9 @@ func (c *Client) List(username string) (ListIter, error) {
 }
 
 // ListPosts returns the posts in a mailing list owned by the given username.
-// If an empty username is provided, the authenticated user is used.
 func (c *Client) ListPosts(username, listname string) (PostIter, error) {
-	path := "lists/" + url.PathEscape(listname) + "/posts"
-	if username != "" {
-		path = "user/" + url.PathEscape(username) + "/" + path
-	}
-	return c.posts("GET", path, nil)
+	p := path.Join("user", username, "lists", listname, "posts")
+	return c.posts("GET", p, nil)
 }
 
 // GetUser returns information about the provided username, or the currently
@@ -124,6 +120,11 @@ func (c *Client) GetUser(username string) (sourcehut.User, error) {
 	user := sourcehut.User{}
 	_, err := c.do("GET", path.Join("user", username), nil, &user)
 	return user, err
+}
+
+// ListEmails returns all emails sent by the provided user.
+func (c *Client) ListEmails(username string) (PostIter, error) {
+	return c.posts("GET", path.Join("user", username, "emails"), nil)
 }
 
 func (c *Client) do(method, u string, body io.Reader, v interface{}) (*http.Response, error) {
