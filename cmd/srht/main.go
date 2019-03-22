@@ -44,6 +44,10 @@ func main() {
 	if err != nil {
 		logger.Fatal("Paste URL could not be parsed.")
 	}
+	lists, err := listsCmd(srhtClient, env)
+	if err != nil {
+		logger.Fatal("Lists URL could not be parsed.")
+	}
 
 	// Commands
 	cmds := &cli.Command{
@@ -52,6 +56,7 @@ func main() {
 	cmds.Commands = []*cli.Command{
 		aboutCmd(os.Stdout, version, commit, env),
 		key,
+		lists,
 		paste,
 		pgp,
 		user,

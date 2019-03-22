@@ -23,6 +23,7 @@ type envVars struct {
 	token string
 	paste string
 	meta  string
+	lists string
 }
 
 func (env envVars) String() string {
@@ -36,7 +37,8 @@ func (env envVars) String() string {
 	return fmt.Sprintf(`SRHT_TOKEN	= %q
 SRHT_META_BASE = %q
 SRHT_PASTE_BASE	= %q
-`, redactedToken, env.meta, env.paste)
+SRHT_LISTS_BASE = %q
+`, redactedToken, env.meta, env.paste, env.lists)
 }
 
 func newEnv() envVars {
@@ -44,5 +46,6 @@ func newEnv() envVars {
 		token: os.Getenv("SRHT_TOKEN"),
 		paste: defEnv("SRHT_PASTE_BASE", "https://paste.sr.ht/api/"),
 		meta:  defEnv("SRHT_META_BASE", "https://meta.sr.ht/api/"),
+		lists: defEnv("SRHT_LISTS_BASE", "https://lists.sr.ht/api/"),
 	}
 }
