@@ -21,6 +21,7 @@ var (
 const userAgent = "git.sr.ht/~samwhited/sourcehut-go/cmd/srht"
 
 func main() {
+	logger := log.New(os.Stderr, "", log.LstdFlags)
 	env := newEnv()
 	srhtClient := sourcehut.NewClient(
 		sourcehut.Token(env.token),
@@ -29,19 +30,19 @@ func main() {
 
 	user, err := userCmd(srhtClient, env)
 	if err != nil {
-		log.Fatal("Meta URL could not be parsed.")
+		logger.Fatal("Meta URL could not be parsed.")
 	}
 	key, err := keyCmd(srhtClient, env)
 	if err != nil {
-		log.Fatal("Meta URL could not be parsed.")
+		logger.Fatal("Meta URL could not be parsed.")
 	}
 	pgp, err := pgpCmd(srhtClient, env)
 	if err != nil {
-		log.Fatal("Meta URL could not be parsed.")
+		logger.Fatal("Meta URL could not be parsed.")
 	}
 	paste, err := pasteCmd(srhtClient, env)
 	if err != nil {
-		log.Fatal("Paste URL could not be parsed.")
+		logger.Fatal("Paste URL could not be parsed.")
 	}
 
 	// Commands
@@ -61,13 +62,17 @@ func main() {
 	switch err {
 	case cli.ErrInvalidCmd:
 		helpCmd := cli.Help(cmds)
-		helpCmd.Exec()
+		if err = helpCmd.Exec(); err != nil {
+			logger.Fatalf("Error showing help: %q", err)
+		}
 		os.Exit(1)
 	case cli.ErrNoRun:
 		helpCmd := cli.Help(cmds)
-		helpCmd.Exec()
+		if err = helpCmd.Exec(); err != nil {
+			logger.Fatalf("Error showing help: %q", err)
+		}
 	case nil:
 	default:
-		log.Fatal(err)
+		logger.Fatal(err)
 	}
 }
