@@ -9,6 +9,7 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"path"
 	"strings"
 
 	"git.sr.ht/~samwhited/sourcehut-go"
@@ -115,6 +116,14 @@ func (c *Client) ListPosts(username, listname string) (PostIter, error) {
 		path = "user/" + url.PathEscape(username) + "/" + path
 	}
 	return c.posts("GET", path, nil)
+}
+
+// GetUser returns information about the provided username, or the currently
+// authenticated user if the username is empty.
+func (c *Client) GetUser(username string) (sourcehut.User, error) {
+	user := sourcehut.User{}
+	_, err := c.do("GET", path.Join("user", username), nil, &user)
+	return user, err
 }
 
 func (c *Client) do(method, u string, body io.Reader, v interface{}) (*http.Response, error) {
