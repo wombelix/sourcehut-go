@@ -1,4 +1,4 @@
-// Copyright 2019 The SourceHut API Contributors.
+// Copyright 2019 The Sourcehut API Contributors.
 // Use of this source code is governed by the BSD 2-clause
 // license that can be found in the LICENSE file.
 
@@ -7,7 +7,7 @@ package sourcehut
 // Ensure that the build fails if Error and Errors don't implement error.
 var _, _ error = (*Error)(nil), (*Errors)(nil)
 
-// Error represents an individual error returned from a SourceHut API call.
+// Error represents an individual error returned from a Sourcehut API call.
 //
 // API docs: https://man.sr.ht/api-conventions.md#error-responses
 type Error struct {

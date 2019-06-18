@@ -1,8 +1,8 @@
-// Copyright 2019 The SourceHut API Contributors.
+// Copyright 2019 The Sourcehut API Contributors.
 // Use of this source code is governed by the BSD 2-clause
 // license that can be found in the LICENSE file.
 
-// Package sourcehut provides access to the SourceHut HTTP API.
+// Package sourcehut provides access to the Sourcehut HTTP API.
 package sourcehut
 
 import (
@@ -10,7 +10,7 @@ import (
 	"net/http"
 )
 
-// Option is used to configure a SourceHut API client.
+// Option is used to configure a Sourcehut API client.
 type Option func(*Transport)
 
 // UserAgent returns an option that configures the client to use the provided
@@ -41,7 +41,7 @@ func RoundTripper(rt http.RoundTripper) Option {
 }
 
 // Transport is an http.RoundTripper wrapping a base RoundTripper and adding a
-// SourceHut API authorization header or user agent.
+// Sourcehut API authorization header or user agent.
 //
 // Transport is a low-level mechanism.
 // Most code will use the NewClient method instead.
@@ -106,21 +106,21 @@ func (t *Transport) base() http.RoundTripper {
 }
 
 // Client is like http.Client except that it knows how to authenticate to the
-// SourceHut API.
+// Sourcehut API.
 type Client struct {
 	httpClient *http.Client
 }
 
-// NewBaseClient returns a new SourceHut API client configured to use the
+// NewBaseClient returns a new Sourcehut API client configured to use the
 // provided http.Client to perform HTTP requests.
 //
 // To add authentication use NewClient or provide a base client that is
-// authenticated with the SourceHut API.
+// authenticated with the Sourcehut API.
 func NewBaseClient(base *http.Client) Client {
 	return Client{httpClient: base}
 }
 
-// NewClient returns a new SourceHut API client configured with the provided
+// NewClient returns a new Sourcehut API client configured with the provided
 // options.
 func NewClient(opts ...Option) Client {
 	return Client{

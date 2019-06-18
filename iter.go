@@ -1,4 +1,4 @@
-// Copyright 2019 The SourceHut API Contributors.
+// Copyright 2019 The Sourcehut API Contributors.
 // Use of this source code is governed by the BSD 2-clause
 // license that can be found in the LICENSE file.
 
@@ -15,7 +15,7 @@ var (
 	errWantArray = errors.New("expected json array in response")
 )
 
-// Response is a SourceHut API response.
+// Response is a Sourcehut API response.
 // This wraps the standard http.Response and provides convenient access to
 // pagination links.
 //

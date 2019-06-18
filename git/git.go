@@ -1,8 +1,8 @@
-// Copyright 2019 The SourceHut API Contributors.
+// Copyright 2019 The Sourcehut API Contributors.
 // Use of this source code is governed by the BSD 2-clause
 // license that can be found in the LICENSE file.
 
-// Package git provides easy API access to SourceHut Git repositories.
+// Package git provides easy API access to Sourcehut Git repositories.
 package git
 
 import (
@@ -15,7 +15,7 @@ import (
 	"git.sr.ht/~samwhited/sourcehut-go"
 )
 
-// BaseURL is the default public SourceHut API URL.
+// BaseURL is the default public Sourcehut API URL.
 // It is exported for convenience.
 const BaseURL = "https://git.sr.ht/api/"
 

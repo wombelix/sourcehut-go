@@ -1,8 +1,8 @@
-// Copyright 2019 The SourceHut API Contributors.
+// Copyright 2019 The Sourcehut API Contributors.
 // Use of this source code is governed by the BSD 2-clause
 // license that can be found in the LICENSE file.
 
-// Package paste provides easy API access to SourceHut file pasting.
+// Package paste provides easy API access to Sourcehut file pasting.
 package paste
 
 import (
@@ -16,7 +16,7 @@ import (
 	"git.sr.ht/~samwhited/sourcehut-go"
 )
 
-// BaseURL is the default public SourceHut paste API URL.
+// BaseURL is the default public Sourcehut paste API URL.
 // It is exported for convenience.
 const BaseURL = "https://paste.sr.ht/api/"
 
@@ -34,7 +34,7 @@ func SrhtClient(client sourcehut.Client) Option {
 	}
 }
 
-// Base returns an option that configures the public SourceHut API URL.
+// Base returns an option that configures the public Sourcehut API URL.
 //
 // If base does not have a trailing slash, one is added automatically.
 // If unspecified, BaseURL is used.
@@ -55,7 +55,7 @@ func Base(base string) Option {
 	}
 }
 
-// Client handles communication with the paste related methods of the SourceHut
+// Client handles communication with the paste related methods of the Sourcehut
 // API.
 //
 // API docs: https://man.sr.ht/paste.sr.ht/api.md

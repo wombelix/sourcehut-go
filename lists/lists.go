@@ -1,8 +1,8 @@
-// Copyright 2019 The SourceHut API Contributors.
+// Copyright 2019 The Sourcehut API Contributors.
 // Use of this source code is governed by the BSD 2-clause
 // license that can be found in the LICENSE file.
 
-// Package lists provides easy API access to SourceHut mailing lists.
+// Package lists provides easy API access to Sourcehut mailing lists.
 package lists
 
 import (
@@ -15,7 +15,7 @@ import (
 	"git.sr.ht/~samwhited/sourcehut-go"
 )
 
-// BaseURL is the default public SourceHut mailing lists API URL.
+// BaseURL is the default public Sourcehut mailing lists API URL.
 // It is exported for convenience.
 const BaseURL = "https://lists.sr.ht/api/"
 
@@ -24,7 +24,7 @@ type Option func(*Client) error
 
 // SrhtClient returns an option that configures the client to use the provided
 // sourcehut.Client for API requests.
-// If unspecified, the default sourcehut.Client (with no options of its own) is
+// If unspecified, a default sourcehut.Client (with no options of its own) is
 // used.
 func SrhtClient(client sourcehut.Client) Option {
 	return func(c *Client) error {
@@ -55,7 +55,7 @@ func Base(base string) Option {
 }
 
 // Client handles communication with the mailing lists related methods of the
-// SourceHut API.
+// Sourcehut API.
 //
 // API docs: https://man.sr.ht/lists.sr.ht/api.md
 type Client struct {

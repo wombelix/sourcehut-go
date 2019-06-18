@@ -1,13 +1,13 @@
-# SourceHut Go SDK
+# Sourcehut Go SDK
 
 [![Issue Tracker](https://img.shields.io/badge/style-todo.sr.ht-green.svg?longCache=true&style=popout-square&label=issues)](https://todo.sr.ht/~samwhited/terraform-provider-sourcehut)
 [![Patches](https://img.shields.io/badge/style-lists.sr.ht-blue.svg?longCache=true&style=popout-square&label=patches)][list]
 [![GoDoc](https://godoc.org/git.sr.ht/~samwhited/sourcehut-go?status.svg)](https://godoc.org/git.sr.ht/~samwhited/sourcehut-go)
 
 
-This is the repository for the unofficial [SourceHut] Go SDK.
+This is the repository for the unofficial [Sourcehut] Go SDK.
 
-[SourceHut]: https://sourcehut.org/
+[Sourcehut]: https://sourcehut.org/
 
 
 ## Submitting Patches
