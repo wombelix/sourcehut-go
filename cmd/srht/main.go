@@ -48,6 +48,10 @@ func main() {
 	if err != nil {
 		logger.Fatal("Lists URL could not be parsed.")
 	}
+	git, err := gitCmd(srhtClient, env)
+	if err != nil {
+		logger.Fatal("Git URL could not be parsed.")
+	}
 
 	// Commands
 	cmds := &cli.Command{
@@ -55,6 +59,7 @@ func main() {
 	}
 	cmds.Commands = []*cli.Command{
 		aboutCmd(os.Stdout, version, commit, env),
+		git,
 		key,
 		lists,
 		paste,
