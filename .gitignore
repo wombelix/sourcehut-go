@@ -1,3 +1,4 @@
+cmd/srht/srht
 .env
 *.html
 *.out
