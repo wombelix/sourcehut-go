@@ -1,3 +1,3 @@
 module git.sr.ht/~samwhited/sourcehut-go
 
-go 1.11
+go 1.13
