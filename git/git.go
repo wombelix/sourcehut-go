@@ -6,6 +6,8 @@
 package git
 
 import (
+	"bytes"
+	"encoding/json"
 	"io"
 	"net/http"
 	"net/url"
@@ -92,8 +94,80 @@ func (c *Client) Version() (string, error) {
 	var ver struct {
 		Version string `json:"version"`
 	}
-	_, err := c.do("GET", "version", nil, &ver)
+	_, err := c.do("GET", "version", "", nil, &ver)
 	return ver.Version, err
+}
+
+// Repo returns information about a specific repository owned by the provided
+// username.
+// If an empty username is provided, the authenticated user is used.
+func (c *Client) Repo(username, repo string) (*Repo, error) {
+	p := "repos"
+	if username != "" {
+		p = url.PathEscape(username) + "/repos"
+	}
+	p = path.Join(p, url.PathEscape(repo))
+
+	newRepo := &Repo{}
+	_, err := c.do("GET", p, "", nil, newRepo)
+	if err != nil {
+		return nil, err
+	}
+
+	return newRepo, nil
+}
+
+// DeleteRepo removes a repository.
+func (c *Client) DeleteRepo(repo string) error {
+	_, err := c.do("DELETE", path.Join("repos", url.PathEscape(repo)), "", nil, nil)
+	return err
+}
+
+// NewRepo creates and returns a new repository from the provided template.
+func (c *Client) NewRepo(name, description string, visibility RepoVisibility) (*Repo, error) {
+	jsonRepo, err := json.Marshal(struct {
+		Name string `json:"name"`
+		Desc string `json:"description"`
+		Visi string `json:"visibility"`
+	}{
+		Name: name,
+		Desc: description,
+		Visi: string(visibility),
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	newRepo := &Repo{}
+	_, err = c.do("POST", "repos", "application/json", bytes.NewReader(jsonRepo), newRepo)
+	if err != nil {
+		return nil, err
+	}
+	return newRepo, nil
+}
+
+// UpdateRepo updates an existing repository.
+// Only the name, description, and visibility will be modified.
+//
+// If repo.Name differs from oldName, a redirect from the old name to the new
+// name.
+func (c *Client) UpdateRepo(oldName string, repo *Repo) error {
+	jsonRepo, err := json.Marshal(struct {
+		Name string `json:"name"`
+		Desc string `json:"description"`
+		Visi string `json:"visibility"`
+	}{
+		Name: repo.Name,
+		Desc: repo.Description,
+		Visi: string(repo.Visibility),
+	})
+	if err != nil {
+		return err
+	}
+
+	p := path.Join("repos", url.PathEscape(oldName))
+	_, err = c.do("PUT", p, "application/json", bytes.NewReader(jsonRepo), nil)
+	return err
 }
 
 // Repos returns an iterator over all repos owned by the provided username.
@@ -110,15 +184,18 @@ func (c *Client) Repos(username string) (RepoIter, error) {
 // authenticated user if the username is empty.
 func (c *Client) GetUser(username string) (sourcehut.User, error) {
 	user := sourcehut.User{}
-	_, err := c.do("GET", path.Join("user", username), nil, &user)
+	_, err := c.do("GET", path.Join("user", username), "", nil, &user)
 	return user, err
 }
 
-func (c *Client) do(method, u string, body io.Reader, v interface{}) (*http.Response, error) {
+func (c *Client) do(method, u, contentType string, body io.Reader, v interface{}) (*http.Response, error) {
 	u = c.baseURL.String() + u
 	req, err := http.NewRequest(method, u, body)
 	if err != nil {
 		return nil, err
+	}
+	if contentType != "" {
+		req.Header.Set("Content-Type", contentType)
 	}
 	return c.srhtClient.Do(req, v)
 }
