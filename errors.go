@@ -13,6 +13,15 @@ var _, _ error = (*Error)(nil), (*Errors)(nil)
 type Error struct {
 	Field  string
 	Reason string
+
+	statusCode int
+}
+
+// StatusCode returns the HTTP status code of the request that unmarshaled this
+// error.
+// May not be set for Errors originating from code outside this package.
+func (err Error) StatusCode() int {
+	return err.statusCode
 }
 
 // Error satisfies the error interface for Error.
@@ -26,4 +35,14 @@ type Errors []Error
 // Error satisfies the error interface for Errors.
 func (err Errors) Error() string {
 	return "Multiple API errors occured"
+}
+
+// StatusCode returns the HTTP status code of the request that unmarshaled this
+// error.
+// May not be set for Errors originating from code outside this package.
+func (err Errors) StatusCode() int {
+	if len(err) == 0 {
+		return 0
+	}
+	return err[0].statusCode
 }

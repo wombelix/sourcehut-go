@@ -182,7 +182,11 @@ func (c Client) do(req *http.Request) (*http.Response, error) {
 		case 0:
 			return resp, nil
 		case 1:
+			e.Errors[0].statusCode = resp.StatusCode
 			return resp, e.Errors[0]
+		}
+		for i := 0; i < len(e.Errors); i++ {
+			e.Errors[i].statusCode = resp.StatusCode
 		}
 		return resp, e.Errors
 	}
