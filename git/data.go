@@ -42,7 +42,7 @@ type Commit struct {
 		Signature string `json:"signature"`
 		Data      string `json:"data"`
 	} `json:"signature"`
-	Parents []string `json"Parents"`
+	Parents []string `json:"Parents"`
 }
 
 // Author is information about the author or committer of a commit.
