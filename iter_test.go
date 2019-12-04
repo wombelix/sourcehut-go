@@ -109,6 +109,16 @@ func TestIter(t *testing.T) {
 	}
 }
 
+func errEq(statusCode int, e1, e2 sourcehut.Error) bool {
+	if e1.Field != e2.Field {
+		return false
+	}
+	if e1.Reason != e2.Reason {
+		return false
+	}
+	return e1.StatusCode() == statusCode
+}
+
 func doIterTest(t *testing.T, u string, client sourcehut.Client, tc iterTest) {
 	req, err := http.NewRequest("GET", u, nil)
 	if err != nil {
@@ -127,8 +137,19 @@ func doIterTest(t *testing.T, u string, client sourcehut.Client, tc iterTest) {
 		i++
 	}
 	err = iter.Err()
-	if !reflect.DeepEqual(err, tc.err) {
-		t.Fatalf("Unexpected err: want=%q, got=%q", tc.err, err)
+
+	switch e := err.(type) {
+	case sourcehut.Error:
+		if !errEq(tc.code, e, tc.err.(sourcehut.Error)) {
+			t.Fatalf("Unexpected err: want=%#v, got=%#v", tc.err, err)
+		}
+	case sourcehut.Errors:
+		for i := 0; i < len(e); i++ {
+			tcErr := tc.err.(sourcehut.Errors)
+			if !errEq(tc.code, e[i], tcErr[i]) {
+				t.Fatalf("Unexpected err: want=%#v, got=%#v", tcErr[i], e[i])
+			}
+		}
 	}
 	if err != nil && iter.Next() {
 		t.Fatalf("Next unexpectedly returned true after error")
