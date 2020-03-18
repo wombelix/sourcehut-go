@@ -6,6 +6,7 @@ package main
 
 import (
 	"fmt"
+	"strings"
 
 	"git.sr.ht/~samwhited/sourcehut-go"
 	"git.sr.ht/~samwhited/sourcehut-go/todo"
@@ -78,23 +79,46 @@ func todoVersionCmd(client *todo.Client) *cli.Command {
 
 func listTrackersCmd(client *todo.Client) *cli.Command {
 	return &cli.Command{
-		Usage:       "trackers [username]",
-		Description: "List all issue trackers owned by the given username or the authenticated user.",
+		Usage:       "trackers [username] [tracker]",
+		Description: "List issue trackers owned by the given username or the authenticated user.",
 		Run: func(c *cli.Command, args ...string) error {
-			var user string
+			var (
+				user        string
+				trackerName string
+			)
+			// TODO: can we name a tracker with a "~"? If sourcehut doesn't prevent
+			// this it could lead to a bug here. Maybe make username an option on all
+			// commands that take it? eg. -u?
 			if len(args) > 0 {
-				user = args[0]
+				if strings.HasPrefix(args[0], "~") {
+					user = args[0]
+					if len(args) > 1 {
+						trackerName = args[1]
+					}
+				} else {
+					trackerName = args[0]
+				}
 			}
 
-			trackers, err := client.Trackers(user)
+			if trackerName == "" {
+				trackers, err := client.Trackers(user)
+				if err != nil {
+					return err
+				}
+				for trackers.Next() {
+					// TODO: formatting
+					fmt.Printf("%+v\n", trackers.Tracker())
+				}
+				return trackers.Err()
+			}
+
+			tracker, err := client.Tracker(user, trackerName)
 			if err != nil {
 				return err
 			}
-			for trackers.Next() {
-				// TODO: formatting
-				fmt.Printf("%+v\n", trackers.Tracker())
-			}
-			return trackers.Err()
+			// TODO: formatting
+			fmt.Printf("%+v\n", tracker)
+			return nil
 		},
 	}
 }
