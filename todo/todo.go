@@ -105,6 +105,25 @@ func (c *Client) Version() (string, error) {
 	return ver.Version, err
 }
 
+// Tracker returns information about a specific issue tracker owned by the
+// provided username.
+// If an empty username is provided, the authenticated user is used.
+func (c *Client) Tracker(username, tracker string) (*Tracker, error) {
+	p := "trackers"
+	if username != "" {
+		p = "user/" + url.PathEscape(username) + "/trackers"
+	}
+	p = path.Join(p, url.PathEscape(tracker))
+
+	newTracker := &Tracker{}
+	_, err := c.do("GET", p, nil, newTracker)
+	if err != nil {
+		return nil, err
+	}
+
+	return newTracker, nil
+}
+
 // Trackers returns an iterator over all issue trackers owned by the provided
 // username.
 // If an empty username is provided, the authenticated user is used.
