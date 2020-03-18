@@ -52,6 +52,10 @@ func main() {
 	if err != nil {
 		logger.Fatal("Git URL could not be parsed.")
 	}
+	todo, err := todoCmd(srhtClient, env)
+	if err != nil {
+		logger.Fatal("TODO URL could not be parsed.")
+	}
 
 	// Commands
 	cmds := &cli.Command{
@@ -65,6 +69,7 @@ func main() {
 		paste,
 		pgp,
 		user,
+		todo,
 		cli.Help(cmds),
 	}
 
