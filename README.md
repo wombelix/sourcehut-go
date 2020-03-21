@@ -21,6 +21,9 @@ send to the correct list cd into the repo and run:
     git config sendemail.to ~samwhited/patches@lists.sr.ht
     git config format.subjectPrefix 'PATCH sourcehut-go'
 
+For more information see the file [`CONTRIBUTING.md`].
+
 [mailing list etiquette]: https://man.sr.ht/lists.sr.ht/etiquette.md
 [contribution]: https://man.sr.ht/git.sr.ht/send-email.md
 [list]: https://lists.sr.ht/~samwhited/patches
+[`CONTRIBUTING.md`]: ./CONTRIBUTING.md
