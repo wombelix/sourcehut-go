@@ -6,6 +6,8 @@
 package todo
 
 import (
+	"bytes"
+	"encoding/json"
 	"io"
 	"net/http"
 	"net/url"
@@ -90,7 +92,7 @@ func NewClient(opts ...Option) (*Client, error) {
 // authenticated user if the username is empty.
 func (c *Client) GetUser(username string) (sourcehut.User, error) {
 	user := sourcehut.User{}
-	_, err := c.do("GET", path.Join("user", username), nil, &user)
+	_, err := c.do("GET", path.Join("user", username), "", nil, &user)
 	return user, err
 }
 
@@ -101,8 +103,29 @@ func (c *Client) Version() (string, error) {
 	var ver struct {
 		Version string `json:"version"`
 	}
-	_, err := c.do("GET", "version", nil, &ver)
+	_, err := c.do("GET", "version", "", nil, &ver)
 	return ver.Version, err
+}
+
+// NewTracker creates and returns a new repository from the provided template.
+func (c *Client) NewTracker(name, description string) (*Tracker, error) {
+	jsonTracker, err := json.Marshal(struct {
+		Name string `json:"name"`
+		Desc string `json:"description"`
+	}{
+		Name: name,
+		Desc: description,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	newTracker := &Tracker{}
+	_, err = c.do("POST", "trackers", "application/json", bytes.NewReader(jsonTracker), newTracker)
+	if err != nil {
+		return nil, err
+	}
+	return newTracker, nil
 }
 
 // Tracker returns information about a specific issue tracker owned by the
@@ -116,7 +139,7 @@ func (c *Client) Tracker(username, tracker string) (*Tracker, error) {
 	p = path.Join(p, url.PathEscape(tracker))
 
 	newTracker := &Tracker{}
-	_, err := c.do("GET", p, nil, newTracker)
+	_, err := c.do("GET", p, "", nil, newTracker)
 	if err != nil {
 		return nil, err
 	}
@@ -135,11 +158,14 @@ func (c *Client) Trackers(username string) (TrackerIter, error) {
 	return c.trackers("GET", path, nil)
 }
 
-func (c *Client) do(method, u string, body io.Reader, v interface{}) (*http.Response, error) {
+func (c *Client) do(method, u, contentType string, body io.Reader, v interface{}) (*http.Response, error) {
 	u = c.baseURL.String() + u
 	req, err := http.NewRequest(method, u, body)
 	if err != nil {
 		return nil, err
+	}
+	if contentType != "" {
+		req.Header.Set("Content-Type", contentType)
 	}
 	return c.srhtClient.Do(req, v)
 }
