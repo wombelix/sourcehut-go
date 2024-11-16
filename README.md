@@ -1,3 +1,9 @@
+<!--
+    SPDX-FileCopyrightText: 2019 The SourceHut API Contributors
+
+    SPDX-License-Identifier: BSD-2-Clause
+-->
+
 # Sourcehut Go SDK
 
 [![Issue Tracker](https://img.shields.io/badge/style-todo.sr.ht-green.svg?longCache=true&style=popout-square&label=issues)](https://todo.sr.ht/~samwhited/terraform-provider-sourcehut)
