@@ -5,7 +5,7 @@
 package testlog_test
 
 import (
-	"git.sr.ht/~samwhited/sourcehut-go/internal/testlog"
+	"git.sr.ht/~wombelix/sourcehut-go/internal/testlog"
 )
 
 import (

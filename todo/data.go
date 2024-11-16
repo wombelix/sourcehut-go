@@ -7,7 +7,7 @@ package todo
 import (
 	"time"
 
-	"git.sr.ht/~samwhited/sourcehut-go"
+	"git.sr.ht/~wombelix/sourcehut-go"
 )
 
 // ShortTracker represents the unexpanded form of an issue tracker.

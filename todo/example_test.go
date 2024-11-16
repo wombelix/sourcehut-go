@@ -7,8 +7,8 @@ package todo_test
 import (
 	"log"
 
-	"git.sr.ht/~samwhited/sourcehut-go"
-	"git.sr.ht/~samwhited/sourcehut-go/todo"
+	"git.sr.ht/~wombelix/sourcehut-go"
+	"git.sr.ht/~wombelix/sourcehut-go/todo"
 )
 
 func ExampleTrackerIter() {

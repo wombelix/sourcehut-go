@@ -7,7 +7,7 @@ package paste
 import (
 	"time"
 
-	"git.sr.ht/~samwhited/sourcehut-go"
+	"git.sr.ht/~wombelix/sourcehut-go"
 )
 
 // Paste contains data about a set of files.

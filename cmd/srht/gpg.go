@@ -8,8 +8,8 @@ import (
 	"fmt"
 	"strconv"
 
-	"git.sr.ht/~samwhited/sourcehut-go"
-	"git.sr.ht/~samwhited/sourcehut-go/meta"
+	"git.sr.ht/~wombelix/sourcehut-go"
+	"git.sr.ht/~wombelix/sourcehut-go/meta"
 	"mellium.im/cli"
 )
 

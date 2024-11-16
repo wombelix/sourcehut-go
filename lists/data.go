@@ -7,7 +7,7 @@ package lists
 import (
 	"time"
 
-	"git.sr.ht/~samwhited/sourcehut-go"
+	"git.sr.ht/~wombelix/sourcehut-go"
 )
 
 // ShortList represents the unexpanded form of a mailing list.

@@ -7,7 +7,7 @@ package meta
 import (
 	"time"
 
-	"git.sr.ht/~samwhited/sourcehut-go"
+	"git.sr.ht/~wombelix/sourcehut-go"
 )
 
 // User expands on the standard user struct.

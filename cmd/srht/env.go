@@ -8,11 +8,11 @@ import (
 	"fmt"
 	"os"
 
-	"git.sr.ht/~samwhited/sourcehut-go/git"
-	"git.sr.ht/~samwhited/sourcehut-go/lists"
-	"git.sr.ht/~samwhited/sourcehut-go/meta"
-	"git.sr.ht/~samwhited/sourcehut-go/paste"
-	"git.sr.ht/~samwhited/sourcehut-go/todo"
+	"git.sr.ht/~wombelix/sourcehut-go/git"
+	"git.sr.ht/~wombelix/sourcehut-go/lists"
+	"git.sr.ht/~wombelix/sourcehut-go/meta"
+	"git.sr.ht/~wombelix/sourcehut-go/paste"
+	"git.sr.ht/~wombelix/sourcehut-go/todo"
 )
 
 // BUG(ssw): Tool does not load a config file or source .env files if present.

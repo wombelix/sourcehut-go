@@ -13,8 +13,8 @@ import (
 	"os"
 	"path/filepath"
 
-	"git.sr.ht/~samwhited/sourcehut-go"
-	"git.sr.ht/~samwhited/sourcehut-go/paste"
+	"git.sr.ht/~wombelix/sourcehut-go"
+	"git.sr.ht/~wombelix/sourcehut-go/paste"
 	"mellium.im/cli"
 )
 

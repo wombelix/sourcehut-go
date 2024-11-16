@@ -1,3 +1,3 @@
-module git.sr.ht/~samwhited/sourcehut-go
+module git.sr.ht/~wombelix/sourcehut-go
 
 go 1.13

@@ -5,7 +5,7 @@
 package todo
 
 import (
-	"git.sr.ht/~samwhited/sourcehut-go"
+	"git.sr.ht/~wombelix/sourcehut-go"
 )
 
 // TrackerIter is used for iterating over a collection of issue trackers.

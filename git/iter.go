@@ -5,7 +5,7 @@
 package git
 
 import (
-	"git.sr.ht/~samwhited/sourcehut-go"
+	"git.sr.ht/~wombelix/sourcehut-go"
 )
 
 // RepoIter is used for iterating over a collection of repos.

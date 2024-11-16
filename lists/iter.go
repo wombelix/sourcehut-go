@@ -5,7 +5,7 @@
 package lists
 
 import (
-	"git.sr.ht/~samwhited/sourcehut-go"
+	"git.sr.ht/~wombelix/sourcehut-go"
 )
 
 // ListIter is used for iterating over a collection of mailing lists.

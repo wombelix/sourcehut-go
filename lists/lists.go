@@ -12,7 +12,7 @@ import (
 	"path"
 	"strings"
 
-	"git.sr.ht/~samwhited/sourcehut-go"
+	"git.sr.ht/~wombelix/sourcehut-go"
 )
 
 // BaseURL is the default public Sourcehut mailing lists API URL.

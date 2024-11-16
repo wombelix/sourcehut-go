@@ -13,7 +13,7 @@ import (
 	"net/url"
 	"strings"
 
-	"git.sr.ht/~samwhited/sourcehut-go"
+	"git.sr.ht/~wombelix/sourcehut-go"
 )
 
 // BaseURL is the default public Sourcehut user API URL.

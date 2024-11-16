@@ -7,8 +7,8 @@ package lists_test
 import (
 	"log"
 
-	"git.sr.ht/~samwhited/sourcehut-go"
-	"git.sr.ht/~samwhited/sourcehut-go/lists"
+	"git.sr.ht/~wombelix/sourcehut-go"
+	"git.sr.ht/~wombelix/sourcehut-go/lists"
 )
 
 func ExamplePostIter() {

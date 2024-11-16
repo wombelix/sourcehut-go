@@ -5,7 +5,7 @@
 package meta
 
 import (
-	"git.sr.ht/~samwhited/sourcehut-go"
+	"git.sr.ht/~wombelix/sourcehut-go"
 )
 
 // SSHKeyIter is used for iterating over the account's authorized SSH keys.

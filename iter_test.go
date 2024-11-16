@@ -12,8 +12,8 @@ import (
 	"strconv"
 	"testing"
 
-	"git.sr.ht/~samwhited/sourcehut-go"
-	"git.sr.ht/~samwhited/sourcehut-go/internal/testlog"
+	"git.sr.ht/~wombelix/sourcehut-go"
+	"git.sr.ht/~wombelix/sourcehut-go/internal/testlog"
 )
 
 type iterTest struct {

@@ -5,7 +5,7 @@
 package paste
 
 import (
-	"git.sr.ht/~samwhited/sourcehut-go"
+	"git.sr.ht/~wombelix/sourcehut-go"
 )
 
 // Iter is used for iterating over a collection of pastes.

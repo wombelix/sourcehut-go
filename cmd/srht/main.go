@@ -8,7 +8,7 @@ import (
 	"log"
 	"os"
 
-	"git.sr.ht/~samwhited/sourcehut-go"
+	"git.sr.ht/~wombelix/sourcehut-go"
 	"mellium.im/cli"
 )
 
@@ -18,7 +18,7 @@ var (
 	version string
 )
 
-const userAgent = "git.sr.ht/~samwhited/sourcehut-go/cmd/srht"
+const userAgent = "git.sr.ht/~wombelix/sourcehut-go/cmd/srht"
 
 func main() {
 	logger := log.New(os.Stderr, "", log.LstdFlags)

@@ -7,8 +7,8 @@ package main
 import (
 	"fmt"
 
-	"git.sr.ht/~samwhited/sourcehut-go"
-	"git.sr.ht/~samwhited/sourcehut-go/git"
+	"git.sr.ht/~wombelix/sourcehut-go"
+	"git.sr.ht/~wombelix/sourcehut-go/git"
 	"mellium.im/cli"
 )
 
