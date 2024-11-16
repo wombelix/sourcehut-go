@@ -11,3 +11,5 @@ cmd/srht/srht
 *.test
 *.txt
 vendor/
+
+!LICENSES/*
