@@ -1,6 +1,6 @@
 module git.sr.ht/~wombelix/sourcehut-go/cmd/srht
 
-go 1.11
+go 1.23
 
 require (
 	git.sr.ht/~wombelix/sourcehut-go v0.0.0-20241116125539-481bf3ae9e3e
