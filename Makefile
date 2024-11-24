@@ -31,3 +31,17 @@ srht: cmd/srht/go.mod go.mod $(GOFILES)
 		-tags "$(TAGS)" \
 		-o ../../$@ \
 		-ldflags "$(GOLDFLAGS)"
+
+test-cmd:
+	@echo Test: cmd/srht
+	cd cmd/srht; go test -cover -fullpath -v
+
+test-testlog:
+	@echo Test: internal/testlog
+	cd internal/testlog; go test -cover -fullpath -v
+
+test-sourcehut:
+	@echo Test: sourcehut
+	go test -cover -fullpath -v
+
+test: test-sourcehut test-cmd test-testlog
