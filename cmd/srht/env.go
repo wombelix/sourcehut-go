@@ -48,7 +48,7 @@ SRHT_PASTE_BASE = %q
 SRHT_LISTS_BASE = %q
 SRHT_GIT_BASE   = %q
 SRHT_TODO_BASE  = %q
-`, redactedToken, env.meta, env.paste, env.lists, env.git)
+`, redactedToken, env.meta, env.paste, env.lists, env.git, env.todo)
 }
 
 func newEnv() envVars {
