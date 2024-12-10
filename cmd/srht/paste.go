@@ -9,7 +9,6 @@ import (
 	"flag"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 
@@ -204,7 +203,7 @@ func getBlobs(client *paste.Client, treeName, zipName string, ids ...string) err
 			}
 		}
 		if treeName != "" {
-			err = ioutil.WriteFile(filepath.Join(treeName, blob.ID), []byte(blob.Contents), 0600)
+			err = os.WriteFile(filepath.Join(treeName, blob.ID), []byte(blob.Contents), 0600)
 			if err != nil {
 				return fmt.Errorf("Error writing blob %s to disk: %q", blob.ID, err)
 			}
