@@ -110,7 +110,7 @@ func listPostsCmd(client *lists.Client) *cli.Command {
 		Usage:       "posts username/listname",
 		Description: "List all emails to the list owned by the given username.",
 		Run: func(c *cli.Command, args ...string) error {
-			parts := make([]string, 2)
+			var parts []string
 			switch len(args) {
 			case 1:
 				parts = strings.SplitN(args[0], "/", 2)
