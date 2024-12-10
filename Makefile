@@ -23,14 +23,15 @@ GOLDFLAGS+=-extldflags $(LDFLAGS)
 GCFLAGS  = all=-trimpath=$(.CURDIR)
 ASMFLAGS = all=-trimpath=$(.CURDIR)
 
-srht: cmd/srht/go.mod go.mod $(GOFILES)
-	cd cmd/srht; \
+srht: go.mod
 	$(GO) build \
+		-trimpath \
 		-gcflags="$(GCFLAGS)" \
 		-asmflags="$(ASMFLAGS)" \
 		-tags "$(TAGS)" \
-		-o ../../$@ \
-		-ldflags "$(GOLDFLAGS)"
+		-o $@ \
+		-ldflags "$(GOLDFLAGS)" \
+		./cmd/srht/
 
 test-cmd:
 	@echo Test: cmd/srht
