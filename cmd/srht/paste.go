@@ -171,6 +171,7 @@ func getBlobs(client *paste.Client, treeName, zipName string, ids ...string) err
 	// Create a zip file if -o was specified.
 	var zipWriter *zip.Writer
 	if zipName != "" {
+		zipName = filepath.Clean(zipName)
 		zipFile, err := os.Create(zipName)
 		if err != nil {
 			return fmt.Errorf("Error creating output file %q: %q", zipName, err)
