@@ -50,3 +50,8 @@ test-sourcehut:
 	go test -cover -fullpath -v
 
 test: test-sourcehut test-cmd test-testlog
+
+bump:
+	@echo bump go dependencies and module versions
+	go get -u ./...
+	go mod tidy
