@@ -1,3 +1,4 @@
+# SPDX-FileCopyrightText: 2024 Dominik Wombacher <dominik@wombacher.cc>
 # SPDX-FileCopyrightText: 2019 The SourceHut API Contributors
 #
 # SPDX-License-Identifier: BSD-2-Clause
@@ -32,6 +33,9 @@ srht: go.mod
 		-o $@ \
 		-ldflags "$(GOLDFLAGS)" \
 		./cmd/srht/
+
+clean:
+	rm srht
 
 test-cmd:
 	@echo Test: cmd/srht

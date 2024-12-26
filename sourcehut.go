@@ -1,3 +1,4 @@
+// SPDX-FileCopyrightText: 2024 Dominik Wombacher <dominik@wombacher.cc>
 // SPDX-FileCopyrightText: 2019 The SourceHut API Contributors
 //
 // SPDX-License-Identifier: BSD-2-Clause
@@ -7,7 +8,10 @@ package sourcehut
 
 import (
 	"encoding/json"
+	"errors"
 	"net/http"
+
+	"git.sr.ht/~wombelix/sourcehut-go/logger"
 )
 
 // Option is used to configure a Sourcehut API client.
@@ -73,16 +77,22 @@ func (t *Transport) RoundTrip(req *http.Request) (*http.Response, error) {
 
 	// TODO: clone req.
 
-	if t.accessToken != "" {
-		// TODO: do we need to sanitize this to prevent header injection in case the
-		// user takes this value from somewhere they shouldn't?
-		req.Header.Set("Authorization", "token "+t.accessToken)
+	if t.accessToken == "" {
+		return nil, errors.New("no access token provided")
 	}
-	if t.userAgent != "" {
-		// TODO: do we need to sanitize this to prevent header injection in case the
-		// user takes this value from somewhere they shouldn't?
-		req.Header.Set("User-Agent", t.userAgent)
+
+	// TODO: do we need to sanitize this to prevent header injection in case the
+	// user takes this value from somewhere they shouldn't?
+	req.Header.Set("Authorization", "token "+t.accessToken)
+
+	if t.userAgent == "" {
+		return nil, errors.New("no user agent configured")
 	}
+
+	// TODO: do we need to sanitize this to prevent header injection in case the
+	// user takes this value from somewhere they shouldn't?
+	req.Header.Set("User-Agent", t.userAgent)
+
 	return t.base().RoundTrip(req)
 }
 
@@ -135,6 +145,9 @@ func NewClient(opts ...Option) Client {
 // value if an API error has occured.
 func (c Client) Do(req *http.Request, v interface{}) (*http.Response, error) {
 	resp, err := c.do(req)
+
+	logger.Log.Debugf("req.Header: %v", req.Header)
+
 	if err != nil {
 		return resp, err
 	}

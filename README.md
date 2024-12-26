@@ -11,7 +11,8 @@ Based on the work from [SamWhited / sourcehut-go](https://codeberg.org/SamWhited
 
 ---
 
-A Go SDK for accessing the [sourcehut](https://sr.ht) legacy REST API.
+A Go SDK for accessing the [sourcehut](https://sr.ht) legacy REST API with `oauth`
+personal access tokens created via [meta.sr.ht/oauth](https://meta.sr.ht/oauth).
 
 [![REUSE status](https://api.reuse.software/badge/git.sr.ht/~wombelix/sourcehut-go)](https://api.reuse.software/info/git.sr.ht/~wombelix/sourcehut-go)
 [![builds.sr.ht status](https://builds.sr.ht/~wombelix/sourcehut-go.svg)](https://builds.sr.ht/~wombelix/sourcehut-go?)
