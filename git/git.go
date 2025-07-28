@@ -8,6 +8,7 @@ package git
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"io"
 	"net/http"
 	"net/url"
@@ -152,15 +153,25 @@ func (c *Client) NewRepo(name, description string, visibility RepoVisibility) (*
 // If repo.Name differs from oldName, a redirect from the old name to the new
 // name.
 func (c *Client) UpdateRepo(oldName string, repo *Repo) error {
-	jsonRepo, err := json.Marshal(struct {
-		Name string `json:"name"`
-		Desc string `json:"description"`
-		Visi string `json:"visibility"`
-	}{
-		Name: repo.Name,
-		Desc: repo.Description,
-		Visi: string(repo.Visibility),
-	})
+	updateData := make(map[string]interface{})
+
+	// Only include name if it's different from oldName (for renaming)
+	if repo.Name != "" && repo.Name != oldName {
+		updateData["name"] = repo.Name
+	}
+
+	// Always include description, allows empty as well
+	updateData["description"] = repo.Description
+
+	if repo.Visibility != "" {
+		// Validate visibility value
+		if repo.Visibility != VisibilityPublic && repo.Visibility != VisibilityUnlisted && repo.Visibility != VisibilityPrivate {
+			return fmt.Errorf("invalid visibility: %s (must be public, unlisted, or private)", repo.Visibility)
+		}
+		updateData["visibility"] = string(repo.Visibility)
+	}
+
+	jsonRepo, err := json.Marshal(updateData)
 	if err != nil {
 		return err
 	}

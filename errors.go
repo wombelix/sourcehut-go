@@ -4,6 +4,8 @@
 
 package sourcehut
 
+import "strings"
+
 // Ensure that the build fails if Error and Errors don't implement error.
 var _, _ error = (*Error)(nil), (*Errors)(nil)
 
@@ -34,7 +36,18 @@ type Errors []Error
 
 // Error satisfies the error interface for Errors.
 func (err Errors) Error() string {
-	return "Multiple API errors occured"
+	if len(err) == 0 {
+		return "[WARN] Errors.Error() triggered with err length 0"
+	}
+	if len(err) == 1 {
+		return err[0].Error()
+	}
+
+	var details []string
+	for _, e := range err {
+		details = append(details, e.Reason)
+	}
+	return strings.Join(details, "; ")
 }
 
 // StatusCode returns the HTTP status code of the request that unmarshaled this
