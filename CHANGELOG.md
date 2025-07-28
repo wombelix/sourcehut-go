@@ -1,3 +1,9 @@
+## v0.1.1 (2025-07-28)
+
+### Fix
+
+- **git**: allow repo desc update, improve error handling and msg
+
 ## v0.1.0 (2024-12-27)
 
 ### Feat
