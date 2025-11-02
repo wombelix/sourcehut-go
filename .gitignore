@@ -11,5 +11,6 @@ cmd/srht/srht
 *.test
 *.txt
 vendor/
+.vscode/
 
 !LICENSES/*

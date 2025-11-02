@@ -11,6 +11,15 @@ Based on the work from [SamWhited / sourcehut-go](https://codeberg.org/SamWhited
 
 ---
 
+**!!! IMPORTANT !!!**: The sr.ht legacy REST API was deprecated a while
+ago and entered its
+[final phase of removal](https://sourcehut.org/blog/2025-09-01-whats-cooking-q3-2025/)
+in September 2025.
+This makes `sourcehut-go` unusable and obsolete.
+Therefore this project is now unmaintained and archived.
+
+---
+
 A Go SDK for accessing the [sourcehut](https://sr.ht) legacy REST API with `oauth`
 personal access tokens created via [meta.sr.ht/oauth](https://meta.sr.ht/oauth).
 
